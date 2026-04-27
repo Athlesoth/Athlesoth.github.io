@@ -124,6 +124,43 @@
   .nav-links a.active::before{background:var(--teal)}
   .nav-links a:hover{color:var(--ink)}
   .nav-cta{display:flex;align-items:center;gap:14px}
+  .nav-burger{
+    display:none;width:42px;height:42px;border:1px solid var(--line);
+    background:rgba(255,255,255,0.02);border-radius:8px;cursor:pointer;
+    padding:0;position:relative;transition:border-color .2s ease, background .2s ease;
+  }
+  .nav-burger:hover{border-color:var(--teal);background:rgba(0,229,204,0.06)}
+  .nav-burger span{
+    position:absolute;left:11px;width:20px;height:1.5px;background:var(--ink);
+    transition:transform .3s ease, opacity .2s ease, top .3s ease;
+  }
+  .nav-burger span:nth-child(1){top:14px}
+  .nav-burger span:nth-child(2){top:20px}
+  .nav-burger span:nth-child(3){top:26px}
+  .nav-burger.open span:nth-child(1){top:20px;transform:rotate(45deg);background:var(--teal)}
+  .nav-burger.open span:nth-child(2){opacity:0}
+  .nav-burger.open span:nth-child(3){top:20px;transform:rotate(-45deg);background:var(--teal)}
+  .nav-mobile{
+    display:none;flex-direction:column;
+    padding:8px 32px 24px;border-top:1px solid var(--line);
+    background:rgba(4,6,8,0.96);backdrop-filter:saturate(140%) blur(14px);
+    max-height:0;overflow:hidden;transition:max-height .35s ease, padding .35s ease;
+  }
+  .nav-mobile.open{max-height:520px;padding:14px 32px 24px}
+  .nm-link{
+    display:flex;align-items:center;gap:18px;
+    padding:18px 4px;border-bottom:1px solid var(--line);
+    color:var(--ink-dim);font-family:'Barlow Condensed',sans-serif;
+    font-size:26px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+    transition:color .2s ease,padding-left .25s ease;
+  }
+  .nm-link:last-child{border-bottom:0}
+  .nm-link:hover,.nm-link.active{color:var(--teal);padding-left:10px}
+  .nm-num{
+    font-size:12px;letter-spacing:.32em;color:var(--ink-mute);
+    font-weight:700;min-width:28px;
+  }
+  .nm-link.active .nm-num,.nm-link:hover .nm-num{color:var(--teal)}
   .pill{
     background:var(--teal);color:#001815;font-weight:600;font-size:14px;
     padding:10px 20px;border-radius:999px;letter-spacing:.01em;
@@ -386,26 +423,53 @@
   .metric .big .plus{color:var(--teal)}
   .metric .lbl{color:var(--ink-dim);font-size:13px;letter-spacing:.22em;text-transform:uppercase;margin-top:10px}
 
-  /* process flow */
+  /* process flow — horizontal on desktop, vertical on mobile */
   .flow{position:relative;margin-top:30px}
-  .flow svg{width:100%;height:auto;display:block}
+  .flow-svg{display:block;width:100%;height:auto}
   .flow-mobile{display:none}
-  @media (max-width: 760px){
+  @media (max-width: 900px){
     .flow-svg{display:none}
-    .flow-mobile{display:block;position:relative;padding:8px 0 8px 28px}
+    .flow-mobile{
+      display:flex;flex-direction:column;gap:0;list-style:none;
+      margin:30px auto 0;padding:8px 0;position:relative;
+      max-width:720px;
+    }
     .flow-mobile::before{
-      content:"";position:absolute;left:14px;top:0;bottom:0;width:1px;
-      background:linear-gradient(180deg, rgba(0,229,204,0.1), rgba(0,229,204,0.6) 50%, rgba(0,229,204,0.1));
+      content:"";position:absolute;left:30px;top:30px;bottom:30px;width:2px;
+      background:linear-gradient(180deg, rgba(0,229,204,0.15), var(--teal) 50%, rgba(0,229,204,0.15));
+      box-shadow:0 0 12px rgba(0,229,204,0.4);
     }
-    .flow-step{position:relative;padding:18px 0 18px 28px;display:flex;flex-direction:column;gap:4px}
+    .flow-step{
+      position:relative;padding:22px 0 22px 90px;
+      display:flex;flex-direction:column;gap:6px;
+    }
     .flow-step::before{
-      content:"";position:absolute;left:-18px;top:24px;width:14px;height:14px;border-radius:50%;
-      background:rgba(0,229,204,0.12);border:1.5px solid var(--teal);
-      box-shadow:0 0 16px rgba(0,229,204,0.5);
+      content:"";position:absolute;left:18px;top:30px;
+      width:26px;height:26px;border-radius:50%;
+      background:rgba(0,229,204,0.10);border:1.5px solid var(--teal);
+      box-shadow:0 0 18px rgba(0,229,204,0.45);
+      box-sizing:border-box;
     }
-    .flow-step.active::before{background:var(--teal)}
-    .flow-step .fs-num{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.28em;color:var(--ink-mute);font-weight:700}
-    .flow-step .fs-title{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:22px;letter-spacing:.04em;color:var(--ink)}
+    .flow-step::after{
+      content:"";position:absolute;left:28px;top:40px;
+      width:6px;height:6px;border-radius:50%;background:var(--teal);
+      box-shadow:0 0 10px var(--teal-2);
+    }
+    .flow-step.active::before{
+      width:34px;height:34px;left:14px;top:26px;
+      background:rgba(0,229,204,0.22);border-width:2px;
+    }
+    .flow-step.active::after{left:27px;top:39px;width:8px;height:8px}
+    .flow-step .fs-num{
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:13px;letter-spacing:.32em;color:var(--ink-mute);font-weight:700;
+    }
+    .flow-step .fs-title{
+      font-family:'Barlow Condensed',sans-serif;
+      font-weight:700;text-transform:uppercase;
+      font-size:40px;line-height:1;letter-spacing:.01em;color:var(--ink);
+    }
+    .flow-step.active .fs-title{color:var(--teal)}
   }
 
   /* ---------- about ---------- */
@@ -593,10 +657,14 @@
     .metric{border-left:0;border-top:1px solid var(--line);padding:28px 0}
     .metric:first-child{border-top:0}
     .nav-links{display:none}
+    .nav-burger{display:inline-flex;align-items:center;justify-content:center}
+    .nav-mobile{display:flex}
   }
   @media (max-width: 640px){
     .wrap{padding:0 20px}
     .nav-inner{padding:14px 20px}
+    .nav-mobile{padding-left:20px;padding-right:20px}
+    .nav-mobile.open{padding-left:20px;padding-right:20px}
     .sec{padding:90px 0}
     .display{font-size:clamp(56px, 18vw, 96px)}
     .svc-grid{grid-template-columns:1fr}
@@ -636,7 +704,17 @@
     </div>
     <div class="nav-cta">
       <a href="#contact" class="pill">Let's Talk</a>
+      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
     </div>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#home" class="nm-link active"><span class="nm-num">01</span><span>Home</span></a>
+    <a href="#services" class="nm-link"><span class="nm-num">02</span><span>Services</span></a>
+    <a href="#cases" class="nm-link"><span class="nm-num">03</span><span>Cases</span></a>
+    <a href="#about" class="nm-link"><span class="nm-num">04</span><span>About</span></a>
+    <a href="#contact" class="nm-link"><span class="nm-num">05</span><span>Contact</span></a>
   </div>
 </nav>
 
@@ -881,49 +959,43 @@
             <stop offset="50%" stop-color="#00E5CC" stop-opacity="1"/>
             <stop offset="100%" stop-color="#00E5CC" stop-opacity="0.2"/>
           </linearGradient>
+          <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
         </defs>
-
-        <!-- connectors -->
         <line x1="120" y1="100" x2="1080" y2="100" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-        <line x1="120" y1="100" x2="1080" y2="100" stroke="url(#flowLine)" stroke-width="2" stroke-dasharray="6 12" class="flow-pulse"/>
-
-        <!-- nodes -->
-        <g class="flow-node" transform="translate(120,100)">
+        <line x1="120" y1="100" x2="1080" y2="100" stroke="url(#flowLine)" stroke-width="1.5" stroke-dasharray="6 12"/>
+        <g transform="translate(120,100)">
           <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
           <circle r="6" fill="#00E5CC"/>
-          <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2" text-transform="uppercase">DISCOVERY</text>
+          <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">DISCOVERY</text>
           <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">01</text>
         </g>
-        <g class="flow-node" transform="translate(360,100)">
+        <g transform="translate(360,100)">
           <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
           <circle r="6" fill="#00E5CC"/>
           <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">ARCHITECTURE</text>
           <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">02</text>
         </g>
-        <g class="flow-node" transform="translate(600,100)">
+        <g transform="translate(600,100)">
           <circle r="26" fill="rgba(0,229,204,0.18)" stroke="#00E5CC" stroke-width="1.6"/>
           <circle r="8" fill="#00F0D0"/>
           <text y="-46" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">DEVELOPMENT</text>
           <text y="58" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">03</text>
         </g>
-        <g class="flow-node" transform="translate(840,100)">
+        <g transform="translate(840,100)">
           <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
           <circle r="6" fill="#00E5CC"/>
           <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">INTEGRATION</text>
           <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">04</text>
         </g>
-        <g class="flow-node" transform="translate(1080,100)">
+        <g transform="translate(1080,100)">
           <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
           <circle r="6" fill="#00E5CC"/>
           <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">DELIVERY</text>
           <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">05</text>
         </g>
-
-        <!-- pulse traveler -->
         <circle r="5" fill="#00F0D0" filter="url(#glow)">
           <animateMotion dur="4s" repeatCount="indefinite" path="M120 100 L1080 100"/>
         </circle>
-        <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
       </svg>
       <ol class="flow-mobile">
         <li class="flow-step"><span class="fs-num">01</span><span class="fs-title">Discovery</span></li>
@@ -932,10 +1004,6 @@
         <li class="flow-step"><span class="fs-num">04</span><span class="fs-title">Integration</span></li>
         <li class="flow-step"><span class="fs-num">05</span><span class="fs-title">Delivery</span></li>
       </ol>
-      <style>
-        .flow-pulse{stroke-dashoffset:0;animation:flowDash 3s linear infinite}
-        @keyframes flowDash{to{stroke-dashoffset:-72}}
-      </style>
     </div>
   </div>
 </section>
@@ -1010,13 +1078,13 @@
             <div class="val addr">RM 5003, 5/F, Yau Lee Centre, 45 Hoi Yuen Road, Kwun Tong, Hong Kong</div>
           </div>
         </div>
-        <div class="ci-row">
-          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></div>
-          <div>
-            <div class="lbl">General</div>
-            <a class="val" href="/cdn-cgi/l/email-protection#10757c696064796864757378787b50777d71797c3e737f7d"><span class="__cf_email__" data-cfemail="f99c9580898d90818d9c9a919192b99e94989095d79a9694">[email&#160;protected]</span></a>
-          </div>
-        </div>
+		<div class="ci-row">
+		  <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></div>
+		  <div>
+			<div class="lbl">General</div>
+			<a href="mailto:elyptixtechhk@gmail.com" class="val" style="transition: color 0.2s ease;" onmouseover="this.style.color='#00E5CC'" onmouseout="this.style.color=''">elyptixtechhk@gmail.com</a>
+		  </div>
+		</div>
       </div>
 
       <form class="form reveal" id="contactForm" novalidate>
@@ -1166,9 +1234,27 @@
     requestAnimationFrame(loop);
   }
 
+  // Mobile nav burger
+  const burger = document.getElementById('navBurger');
+  const navMobile = document.getElementById('navMobile');
+  burger.addEventListener('click', ()=>{
+    const isOpen = burger.classList.toggle('open');
+    navMobile.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+  navMobile.querySelectorAll('a').forEach(a=>{
+    a.addEventListener('click', ()=>{
+      burger.classList.remove('open');
+      navMobile.classList.remove('open');
+      burger.setAttribute('aria-expanded','false');
+      burger.setAttribute('aria-label','Open menu');
+    });
+  });
+
   // Active nav highlight
   const sections = ['home','services','cases','about','contact'].map(id=>document.getElementById(id));
-  const navLinks = document.querySelectorAll('.nav-links a');
+  const navLinks = document.querySelectorAll('.nav-links a, .nm-link');
   const sIo = new IntersectionObserver((entries)=>{
     entries.forEach(e=>{
       if(e.isIntersecting){
@@ -1357,6 +1443,7 @@
       const out = Object.assign({}, defaultPrefs);
       modalContent.querySelectorAll('input[data-pref]').forEach(i=>{ out[i.dataset.pref] = i.checked; });
       savePrefs(out); cookie.classList.remove('show'); flash();
+      setTimeout(closeModal, 900);
     });
     document.getElementById('prefReject').addEventListener('click', ()=>{
       const out = Object.assign({}, defaultPrefs);
