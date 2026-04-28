@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>О проекте — ARTEFACT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.about-intro{
+  padding:120px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  border-bottom:1px solid var(--line);
+}
+.about-intro-text{
+  font-family:'Fraunces',serif;font-weight:300;font-size:22px;line-height:1.5;color:var(--ink);
+}
+.about-intro-text p + p{margin-top:20px}
+.about-intro-text .drop{
+  float:left;font-family:'Cormorant Garamond',serif;font-weight:500;
+  font-size:90px;line-height:.9;color:var(--gold-2);padding:6px 14px 0 0;
+}
+.about-intro-stats{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);
+  border:1px solid var(--line);
+}
+.about-stat{padding:36px;background:var(--ivory)}
+.about-stat-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:400;line-height:1;color:var(--obsidian)}
+.about-stat-num em{font-style:italic;color:var(--gold-2);font-family:'Fraunces',serif;font-weight:300}
+.about-stat-label{margin-top:12px;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* TIMELINE STORY */
+.story{padding:140px 48px;background:var(--ivory-2);position:relative;overflow:hidden}
+.story-head{margin-bottom:80px;max-width:780px}
+.story-list{position:relative;max-width:980px;margin:0 auto;padding-left:60px}
+.story-list::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:1px;background:var(--line-strong)}
+.story-item{position:relative;padding-bottom:60px}
+.story-item:last-child{padding-bottom:0}
+.story-item::before{
+  content:'';position:absolute;left:-56px;top:8px;width:14px;height:14px;border-radius:50%;
+  background:var(--gold);box-shadow:0 0 0 4px var(--ivory-2), 0 0 0 5px var(--gold);
+}
+.story-date{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.15em;color:var(--gold-2);margin-bottom:8px}
+.story-title{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:500;line-height:1.1;color:var(--obsidian);margin-bottom:10px}
+.story-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.story-text{font-family:'Fraunces',serif;font-weight:300;font-size:17px;line-height:1.55;color:var(--ink-soft);max-width:600px}
+
+/* TEAM FULL */
+.team-full{padding:140px 48px;position:relative;overflow:hidden}
+.team-full-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:80px;gap:40px;flex-wrap:wrap}
+.team-full-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:48px}
+.team-full-card{position:relative;cursor:none}
+.team-full-img{
+  aspect-ratio:3/4;border-radius:240px 240px 4px 4px;overflow:hidden;
+  background:#333;position:relative;box-shadow:0 30px 60px -20px rgba(14,13,11,.3);
+}
+.team-full-img img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1), filter 1s ease;filter:grayscale(.3)}
+.team-full-card:hover .team-full-img img{transform:scale(1.06);filter:grayscale(0)}
+.team-full-img::before{content:'';position:absolute;inset:0;border:1px solid rgba(255,255,255,.18);border-radius:inherit;z-index:2;pointer-events:none}
+.team-full-num{
+  position:absolute;top:24px;left:24px;z-index:3;
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-size:20px;color:var(--ivory);
+  background:rgba(14,13,11,.4);backdrop-filter:blur(6px);
+  width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+}
+.team-full-content{margin-top:24px}
+.team-full-name{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:500;line-height:1.05;color:var(--obsidian)}
+.team-full-name em{font-style:italic;font-family:'Fraunces',serif;font-weight:300}
+.team-full-role{margin-top:6px;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-2)}
+.team-full-quote{
+  margin-top:18px;font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:16px;line-height:1.55;
+  color:var(--ink-soft);padding-left:18px;border-left:2px solid var(--gold);
+}
+.team-full-quote-author{display:block;margin-top:6px;font-style:normal;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);font-family:'Inter Tight',sans-serif}
+
+/* VALUES */
+.values{padding:140px 48px;background:var(--obsidian);color:var(--ivory);position:relative;overflow:hidden}
+.values::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 1000px 500px at 50% 0%, rgba(201,162,75,.1), transparent 60%);
+}
+.values-head{margin-bottom:80px;text-align:center;position:relative;z-index:1}
+.values-head .section-tag{justify-content:center;color:var(--gold-light)}
+.values-head .section-tag::before{background:var(--gold-light)}
+.values-head .section-tag::after{content:'';width:30px;height:1px;background:var(--gold-light)}
+.values-head .section-title{color:var(--ivory)}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;position:relative;z-index:1;max-width:1280px;margin:0 auto}
+.value-card{
+  padding:48px 32px;border:1px solid rgba(255,255,255,.1);border-radius:8px;
+  background:rgba(255,255,255,.02);position:relative;overflow:hidden;
+  transition:all .5s cubic-bezier(.2,.7,.2,1);
+}
+.value-card:hover{transform:translateY(-8px);background:rgba(201,162,75,.05);border-color:rgba(201,162,75,.3)}
+.value-roman{
+  font-family:'Cormorant Garamond',serif;font-size:64px;font-weight:300;line-height:1;color:var(--gold);
+  margin-bottom:24px;
+}
+.value-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:500;line-height:1.1;margin-bottom:14px}
+.value-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-light)}
+.value-text{font-family:'Fraunces',serif;font-weight:300;font-size:16px;line-height:1.6;color:rgba(244,239,230,.7)}
+
+/* CONTACTS */
+.contact{padding:140px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-bottom:1px solid var(--line)}
+.contact-info .section-title{margin-bottom:32px}
+.contact-row{
+  display:flex;justify-content:space-between;align-items:center;gap:24px;
+  padding:24px 0;border-bottom:1px solid var(--line);
+  font-size:14px;
+}
+.contact-row .l{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft)}
+.contact-row .v{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--obsidian)}
+.contact-row .v a{color:inherit;text-decoration:none;border-bottom:1px solid var(--line-strong);transition:color .3s}
+.contact-row .v a:hover{color:var(--gold-2)}
+.contact-img{aspect-ratio:1;border-radius:300px;overflow:hidden;position:relative}
+.contact-img img{width:100%;height:100%;object-fit:cover;filter:saturate(.9)}
+.contact-img::before{content:'';position:absolute;inset:0;border:1px solid rgba(255,255,255,.18);border-radius:inherit;z-index:2;pointer-events:none}
+
+@media (max-width:900px){
+  .about-intro{grid-template-columns:1fr;gap:48px;padding:60px 20px}
+  .about-intro-text{font-size:18px}
+  .about-stat{padding:24px}
+  .about-stat-num{font-size:54px}
+  .story{padding:80px 20px}
+  .story-list{padding-left:40px}
+  .story-item::before{left:-36px}
+  .team-full{padding:80px 20px}
+  .team-full-head{flex-direction:column;align-items:flex-start;margin-bottom:48px}
+  .team-full-grid{grid-template-columns:1fr;gap:48px}
+  .values{padding:80px 20px}
+  .values-grid{grid-template-columns:1fr}
+  .contact{grid-template-columns:1fr;padding:80px 20px;gap:48px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<svg style="display:none">
+  <symbol id="star4" viewBox="0 0 24 24"><path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z"/></symbol>
+  <symbol id="arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 L17 7 M9 7 H17 V15"/></symbol>
+  <symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></symbol>
+</svg>
+
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <img src="logo.svg" alt="ARTEFACT" class="logo-img">
+  </a>
+  <div class="nav-center">
+    <a href="index.html">Главная</a>
+    <a href="gallery.html">Галерея</a>
+    <a href="eras.html">Эпохи</a>
+    <a href="tournaments.html">Турниры</a>
+    <a href="about.html" class="active">О проекте</a>
+    <a href="journal.html">Журнал</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-dot"></span>
+    <span class="hide-mobile">В эфире</span>
+    <button class="menu-btn" id="menuBtn">Меню <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg></button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">×</button>
+  <div class="menu-inner">
+    <div class="menu-eyebrow">Навигация · ARTEFACT</div>
+    <ul class="menu-links">
+      <li><a href="index.html"><em>I</em> Главная</a></li>
+      <li><a href="gallery.html"><em>II</em> Галерея</a></li>
+      <li><a href="eras.html"><em>III</em> Эпохи</a></li>
+      <li><a href="tournaments.html"><em>IV</em> Турниры</a></li>
+      <li><a href="about.html"><em>V</em> О проекте</a></li>
+      <li><a href="journal.html"><em>VI</em> Журнал</a></li>
+    </ul>
+    <div class="menu-foot"><span>artefact.art@mail.ru</span><span>VK · Telegram · YouTube</span></div>
+  </div>
+</div>
+
+<section class="page-head">
+  <div class="page-head-inner">
+    <div>
+      <div class="crumb"><a href="index.html">Главная</a><span class="crumb-sep"></span><span>О проекте</span></div>
+      <h1 class="page-title">Те, кто <em>живёт</em><br>искусством.</h1>
+    </div>
+    <p class="page-deck">ARTEFACT родился в июле 2021 как разговор про искусство для тех, кто никогда не был «своим» в музеях. Сегодня — это просветительский холдинг, команда из пяти человек и тысяча историй.</p>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="about-intro">
+  <div class="about-intro-text reveal">
+    <p><span class="drop">A</span>RTEFACT — это просветительский проект о живописи, архитектуре и стилях. Первым нашим материалом стал фильм об архитектуре средневековья, опубликованный летом 2021 года.</p>
+    <p>За четыре с лишним года мы выпустили более 70 авторских видео и опубликовали более 1000 интересных постов: разборы картин, истории художников, неожиданные совпадения и факты, которые делают живопись живой.</p>
+    <p>С марта 2023 года Artefact входит в состав информационного холдинга <strong style="color:var(--gold-2)">VAW</strong> — но идея осталась прежней: рассказывать о большом искусстве человеческим языком.</p>
+  </div>
+  <div class="about-intro-stats reveal-stagger">
+    <div class="about-stat"><div class="about-stat-num">2021</div><div class="about-stat-label">Год основания</div></div>
+    <div class="about-stat"><div class="about-stat-num">70<em>+</em></div><div class="about-stat-label">Авторских видео</div></div>
+    <div class="about-stat"><div class="about-stat-num">1K<em>+</em></div><div class="about-stat-label">Постов и фактов</div></div>
+    <div class="about-stat"><div class="about-stat-num">5</div><div class="about-stat-label">Человек в команде</div></div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story">
+  <div class="story-head reveal">
+    <div class="section-tag">Хроника · §I</div>
+    <h2 class="section-title">Как <em>родился</em><br>проект.</h2>
+  </div>
+
+  <div class="story-list">
+    <div class="story-item reveal">
+      <div class="story-date">июль 2021</div>
+      <h3 class="story-title">Первый <em>фильм</em></h3>
+      <p class="story-text">Алексей Щербаков и Владислав Валиев публикуют первый фильм об архитектуре средневековья. Так начинается история ARTEFACT.</p>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-date">2021 — 2022</div>
+      <h3 class="story-title">Постоянные рубрики</h3>
+      <p class="story-text">Появляются «#ФактИзArtefact», разборы картин, циклы об эпохах. Аудитория ВКонтакте, Telegram и YouTube растёт.</p>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-date">март 2023</div>
+      <h3 class="story-title">Холдинг <em>VAW</em></h3>
+      <p class="story-text">ARTEFACT входит в состав информационного холдинга VAW. Это даёт проекту инфраструктуру и возможность расти.</p>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-date">2024 — 2025</div>
+      <h3 class="story-title">70 видео и тысяча фактов</h3>
+      <p class="story-text">Команда выпускает юбилейный — 70-й — фильм проекта. Опубликовано более 1000 постов, проведены первые турниры для зрителей.</p>
+    </div>
+    <div class="story-item reveal">
+      <div class="story-date">2026 — сейчас</div>
+      <h3 class="story-title">Новая <em>галерея</em></h3>
+      <p class="story-text">ARTEFACT перезапускается с новым сайтом, расширенным каталогом и форматом еженедельного журнала о картине недели.</p>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section class="team-full" id="team">
+  <div class="team-full-head reveal">
+    <div>
+      <div class="section-tag">Команда · §II</div>
+      <h2 class="section-title">Незаменимые <em>люди</em>.</h2>
+    </div>
+    <p style="max-width:380px;font-family:'Fraunces',serif;font-weight:300;font-size:17px;line-height:1.55;color:var(--ink-soft)">Пять человек, которые превращают архивные данные в живые истории. Каждый — со своим взглядом и своей частью искусства.</p>
+  </div>
+
+  <div class="team-full-grid reveal-stagger">
+    <div class="team-full-card" data-hover="view">
+      <div class="team-full-img">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80" alt="Алексей Щербаков">
+        <div class="team-full-num">I</div>
+      </div>
+      <div class="team-full-content">
+        <h3 class="team-full-name">Алексей <em>Щербаков</em></h3>
+        <div class="team-full-role">Сооснователь · Генеральный директор</div>
+        <p class="team-full-quote">«Всё, что вы можете себе представить, реально.»<span class="team-full-quote-author">— Пабло Пикассо</span></p>
+      </div>
+    </div>
+
+    <div class="team-full-card" data-hover="view">
+      <div class="team-full-img">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" alt="Владислав Валиев">
+        <div class="team-full-num">II</div>
+      </div>
+      <div class="team-full-content">
+        <h3 class="team-full-name">Владислав Валиев</h3>
+        <div class="team-full-role">Сооснователь · Исполнительный директор</div>
+        <p class="team-full-quote">«Чтобы понять искусство, им надо жить, каждый день открывать что-то новое и ранее неизведанное для себя.»<span class="team-full-quote-author">— Личное</span></p>
+      </div>
+    </div>
+
+    <div class="team-full-card" data-hover="view">
+      <div class="team-full-img">
+        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=800&q=80" alt="Екатерина Круглова">
+        <div class="team-full-num">III</div>
+      </div>
+      <div class="team-full-content">
+        <h3 class="team-full-name">Екатерина <em>Круглова</em></h3>
+        <div class="team-full-role">Младший научный сотрудник</div>
+        <p class="team-full-quote">«Искусство заключается в том, чтобы найти необыкновенное в обыкновенном и обыкновенное в необыкновенном.»<span class="team-full-quote-author">— Дени Дидро</span></p>
+      </div>
+    </div>
+
+    <div class="team-full-card" data-hover="view">
+      <div class="team-full-img">
+        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=800&q=80" alt="Елена Шаблицкая">
+        <div class="team-full-num">IV</div>
+      </div>
+      <div class="team-full-content">
+        <h3 class="team-full-name">Елена <em>Шаблицкая</em></h3>
+        <div class="team-full-role">Главный консультант</div>
+        <p class="team-full-quote">«Не посылайте дальтоников за синей птицей. Могут вернуться ни с чем.»<span class="team-full-quote-author">— Станислав Ежи Лец</span></p>
+      </div>
+    </div>
+
+    <div class="team-full-card" data-hover="view">
+      <div class="team-full-img">
+        <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=800&q=80" alt="Юлия Сычёва">
+        <div class="team-full-num">V</div>
+      </div>
+      <div class="team-full-content">
+        <h3 class="team-full-name">Юлия Сычёва</h3>
+        <div class="team-full-role">Внештатный консультант</div>
+        <p class="team-full-quote">«Умейте любить искусство в себе, а не себя в искусстве.»<span class="team-full-quote-author">— Константин Станиславский</span></p>
+      </div>
+    </div>
+
+    <div class="team-full-card" data-hover="view">
+      <div class="team-full-img" style="background:var(--ivory-2);display:flex;align-items:center;justify-content:center">
+        <div style="text-align:center;padding:40px">
+          <div style="font-family:'Cormorant Garamond',serif;font-size:80px;color:var(--gold-2);font-weight:300">+</div>
+          <div style="font-family:'Fraunces',serif;font-style:italic;font-size:18px;color:var(--ink-soft);margin-top:8px;max-width:200px;line-height:1.4">Хотите присоединиться?</div>
+        </div>
+      </div>
+      <div class="team-full-content">
+        <h3 class="team-full-name">Стать <em>автором</em></h3>
+        <div class="team-full-role">Открытая позиция</div>
+        <p class="team-full-quote">Если вы пишете об искусстве и хотите делать это с нами — напишите нам короткое письмо.<span class="team-full-quote-author">artefact.art@mail.ru</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="values">
+  <div class="values-head reveal">
+    <div class="section-tag">Принципы · §III</div>
+    <h2 class="section-title">Как мы <em>работаем</em>.</h2>
+  </div>
+  <div class="values-grid reveal-stagger">
+    <div class="value-card">
+      <div class="value-roman">I.</div>
+      <h3 class="value-title">Без академического <em>тумана</em></h3>
+      <p class="value-text">Сложное — простыми словами. Мы любим точность, но ненавидим заумь. Если факт нельзя объяснить за минуту — мы переписываем.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-roman">II.</div>
+      <h3 class="value-title">Источник всегда виден</h3>
+      <p class="value-text">Мы ссылаемся на музеи, каталоги-резоне, академические публикации. Истории в духе «говорят, что» — не наш формат.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-roman">III.</div>
+      <h3 class="value-title">Картина — это <em>история</em></h3>
+      <p class="value-text">За каждым полотном — человек, заказчик, обстоятельства. Мы рассказываем не «что нарисовано», а «почему именно так».</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact">
+  <div class="contact-info reveal">
+    <div class="section-tag">Связь · §IV</div>
+    <h2 class="section-title">Напишите <em>нам</em>.</h2>
+    <p style="font-family:'Fraunces',serif;font-weight:300;font-size:17px;line-height:1.55;color:var(--ink-soft);margin-top:24px;margin-bottom:32px;max-width:480px">С нетерпением ждём ваших писем — с вопросами, идеями, предложениями о сотрудничестве или историями, которые вы хотели бы увидеть в наших разборах.</p>
+    <div class="contact-row"><div class="l">E-mail</div><div class="v"><a href="mailto:artefact.art@mail.ru" data-hover="view">artefact.art@mail.ru</a></div></div>
+    <div class="contact-row"><div class="l">VK</div><div class="v"><a href="https://vk.com/artefactam" data-hover="view">vk.com/artefactam</a></div></div>
+    <div class="contact-row"><div class="l">Telegram</div><div class="v"><a href="https://t.me/ARTEFACTAM" data-hover="view">@ARTEFACTAM</a></div></div>
+    <div class="contact-row"><div class="l">YouTube</div><div class="v"><a href="https://www.youtube.com/channel/UCxVeixiBg8rmoQ30OiCyPHw" data-hover="view">ARTEFACT TV</a></div></div>
+    <div class="contact-row"><div class="l">Холдинг</div><div class="v">VAW · Москва</div></div>
+  </div>
+  <div class="contact-img reveal" data-hover="view">
+    <img src="https://images.unsplash.com/photo-1577083287840-0f5e3f0a9ddc?auto=format&fit=crop&w=900&q=80" alt="Артефакт">
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div class="section-tag">Письма из галереи</div>
+    <h2 class="newsletter-title">Получайте <em>истории</em> картин<br>раз в неделю.</h2>
+    <p class="newsletter-text">Один разбор, одна эпоха, одна редкая деталь — каждый вторник.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо ✦'">
+      <input type="email" placeholder="Ваш e-mail" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a href="index.html" class="foot-logo">
+        <img src="logo.svg" alt="ARTEFACT" class="logo-img foot-logo-img">
+      </a>
+      <p class="foot-tag">Просветительский проект об истории искусств. С 2021 — в составе информационного холдинга VAW.</p>
+    </div>
+    <div class="foot-col"><h4>Проект</h4><a href="about.html">О нас</a><a href="about.html#team">Команда</a></div>
+    <div class="foot-col"><h4>Контент</h4><a href="gallery.html">Галерея</a><a href="eras.html">Эпохи</a><a href="journal.html">Журнал</a></div>
+    <div class="foot-col"><h4>Контакты</h4><a href="mailto:artefact.art@mail.ru">artefact.art@mail.ru</a></div>
+  </div>
+  <div class="foot-bottom"><div>© ARTEFACT, MMXXI — MMXXVI · Made by V.Vl</div><div>Москва · Холдинг VAW</div></div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

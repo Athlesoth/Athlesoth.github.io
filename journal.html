@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Журнал — ARTEFACT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.featured{padding:60px 48px 0}
+.featured-card{
+  display:grid;grid-template-columns:1.1fr 1fr;gap:60px;align-items:center;
+  padding:48px;background:var(--ivory-2);border-radius:8px;position:relative;overflow:hidden;
+  border:1px solid var(--line);
+}
+.featured-card::before{
+  content:'PRINCIPALE';position:absolute;top:24px;right:32px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--gold-2);
+  background:var(--ivory);padding:8px 14px;border-radius:999px;border:1px solid var(--line);
+}
+.featured-img{aspect-ratio:4/3;border-radius:4px;overflow:hidden;position:relative;box-shadow:0 30px 60px -20px rgba(14,13,11,.3)}
+.featured-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s ease}
+.featured-img:hover img{transform:scale(1.04)}
+.featured-img::after{content:'';position:absolute;inset:0;border:6px solid var(--ivory);box-shadow:inset 0 0 0 1px var(--gold-2);pointer-events:none}
+.featured-cat{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-2);margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.featured-cat::before{content:'';width:30px;height:1px;background:var(--gold-2)}
+.featured-title{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(36px,4.5vw,64px);line-height:1;letter-spacing:-.01em;color:var(--obsidian);margin-bottom:18px}
+.featured-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.featured-deck{font-family:'Fraunces',serif;font-weight:300;font-size:18px;line-height:1.55;color:var(--ink-soft);margin-bottom:24px}
+.featured-meta{display:flex;gap:24px;margin-bottom:32px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+.featured-meta span:not(:last-child)::after{content:'·';margin-left:24px;color:var(--gold-2)}
+
+/* JOURNAL TABS */
+.journal-tabs{
+  padding:60px 48px 32px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--line);gap:24px;flex-wrap:wrap;
+  position:sticky;top:0;background:rgba(244,239,230,.92);backdrop-filter:blur(20px);z-index:50;
+}
+.tab-list{display:flex;gap:32px;font-family:'Cormorant Garamond',serif;font-size:24px;letter-spacing:.01em}
+.tab{cursor:none;color:var(--ink-soft);transition:color .3s;padding-bottom:8px;border-bottom:1px solid transparent;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;font-size:inherit;letter-spacing:inherit}
+.tab.active{color:var(--obsidian);border-bottom-color:var(--gold)}
+.tab em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;font-size:.9em}
+.tab-count{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--ink-soft);margin-left:6px;vertical-align:super}
+
+.journal-grid{padding:60px 48px 120px;display:grid;grid-template-columns:repeat(3,1fr);gap:40px}
+.j-card{cursor:none;text-decoration:none;color:inherit;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.j-card:hover{transform:translateY(-8px)}
+.j-thumb{aspect-ratio:4/3;border-radius:4px;overflow:hidden;position:relative;background:#333;margin-bottom:18px}
+.j-thumb img{width:100%;height:100%;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1);filter:saturate(.92)}
+.j-card:hover .j-thumb img{transform:scale(1.06)}
+.j-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(14,13,11,.55))}
+.j-thumb-inner-frame{content:'';position:absolute;inset:0;border:5px solid var(--ivory);box-shadow:inset 0 0 0 1px var(--gold-2);pointer-events:none;z-index:3}
+.j-tag{position:absolute;top:14px;left:14px;z-index:4;background:var(--gold);color:var(--obsidian);padding:6px 12px;border-radius:999px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+.j-tag.video{background:var(--obsidian);color:var(--ivory)}
+.j-tag.fact{background:var(--ivory);color:var(--obsidian)}
+.j-duration{position:absolute;top:14px;right:14px;z-index:4;background:rgba(14,13,11,.55);backdrop-filter:blur(6px);color:var(--ivory);padding:6px 10px;border-radius:999px;font-size:10px;letter-spacing:.15em;font-family:'JetBrains Mono',monospace}
+.j-play{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:64px;height:64px;border-radius:50%;background:rgba(244,239,230,.92);
+  display:flex;align-items:center;justify-content:center;z-index:4;
+  transition:all .4s cubic-bezier(.2,.7,.2,1);backdrop-filter:blur(6px);
+}
+.j-card:hover .j-play{background:var(--gold);width:80px;height:80px}
+.j-play svg{width:20px;height:20px;color:var(--obsidian);margin-left:3px}
+.j-cat{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-2);margin-bottom:10px;display:flex;align-items:center;gap:14px}
+.j-cat::before{content:'';width:24px;height:1px;background:var(--gold-2)}
+.j-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;line-height:1.15;color:var(--obsidian)}
+.j-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.j-deck{margin-top:10px;font-family:'Fraunces',serif;font-weight:300;font-size:15px;line-height:1.5;color:var(--ink-soft)}
+.j-meta{margin-top:16px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* FACT CARDS — особый стиль */
+.j-card.fact-card .j-thumb{aspect-ratio:1;background:linear-gradient(135deg,var(--ivory-2),var(--ivory-3));position:relative}
+.j-card.fact-card .j-thumb::before{
+  content:'';position:absolute;inset:24px;border:1px solid var(--gold-2);border-radius:4px;
+}
+.j-card.fact-card .j-thumb::after{display:none}
+.fact-roman{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Cormorant Garamond',serif;font-size:140px;font-weight:300;color:var(--gold);line-height:1;
+}
+.fact-label{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--obsidian);font-weight:600}
+
+@media (max-width:900px){
+  .featured{padding:32px 20px 0}
+  .featured-card{grid-template-columns:1fr;gap:32px;padding:24px}
+  .journal-tabs{padding:32px 20px 20px}
+  .tab-list{gap:20px}
+  .tab{font-size:18px}
+  .journal-grid{padding:32px 20px 60px;grid-template-columns:1fr;gap:32px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<svg style="display:none">
+  <symbol id="star4" viewBox="0 0 24 24"><path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z"/></symbol>
+  <symbol id="arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 L17 7 M9 7 H17 V15"/></symbol>
+  <symbol id="play" viewBox="0 0 24 24"><path d="M6 4 L20 12 L6 20 Z" fill="currentColor"/></symbol>
+</svg>
+
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <img src="logo.svg" alt="ARTEFACT" class="logo-img">
+  </a>
+  <div class="nav-center">
+    <a href="index.html">Главная</a>
+    <a href="gallery.html">Галерея</a>
+    <a href="eras.html">Эпохи</a>
+    <a href="tournaments.html">Турниры</a>
+    <a href="about.html">О проекте</a>
+    <a href="journal.html" class="active">Журнал</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-dot"></span>
+    <span class="hide-mobile">В эфире</span>
+    <button class="menu-btn" id="menuBtn">Меню <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg></button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">×</button>
+  <div class="menu-inner">
+    <div class="menu-eyebrow">Навигация · ARTEFACT</div>
+    <ul class="menu-links">
+      <li><a href="index.html"><em>I</em> Главная</a></li>
+      <li><a href="gallery.html"><em>II</em> Галерея</a></li>
+      <li><a href="eras.html"><em>III</em> Эпохи</a></li>
+      <li><a href="tournaments.html"><em>IV</em> Турниры</a></li>
+      <li><a href="about.html"><em>V</em> О проекте</a></li>
+      <li><a href="journal.html"><em>VI</em> Журнал</a></li>
+    </ul>
+    <div class="menu-foot"><span>artefact.art@mail.ru</span><span>VK · Telegram · YouTube</span></div>
+  </div>
+</div>
+
+<section class="page-head">
+  <div class="page-head-inner">
+    <div>
+      <div class="crumb"><a href="index.html">Главная</a><span class="crumb-sep"></span><span>Журнал</span></div>
+      <h1 class="page-title"><em>Журнал</em><br>проекта.</h1>
+    </div>
+    <p class="page-deck">Видео-разборы, статьи и факты — всё, что мы публикуем регулярно. Здесь же — флагманская «Картина недели». Прокручивайте, читайте, смотрите.</p>
+  </div>
+</section>
+
+<!-- FEATURED -->
+<section class="featured">
+  <a href="#" class="featured-card reveal" data-hover="view" style="text-decoration:none;color:inherit">
+    <div class="featured-img">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Ilya_Repin_-_%D0%9A%D1%80%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9_%D1%85%D0%BE%D0%B4_%D0%B2_%D0%9A%D1%83%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%B3%D1%83%D0%B1%D0%B5%D1%80%D0%BD%D0%B8%D0%B8_-_Google_Art_Project.jpg/1200px-Ilya_Repin_-_%D0%9A%D1%80%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9_%D1%85%D0%BE%D0%B4_%D0%B2_%D0%9A%D1%83%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%B3%D1%83%D0%B1%D0%B5%D1%80%D0%BD%D0%B8%D0%B8_-_Google_Art_Project.jpg" alt="Крестный ход в Курской губернии">
+    </div>
+    <div>
+      <div class="featured-cat">Картина недели · Vol. 04</div>
+      <h2 class="featured-title">«Крестный ход в <em>Курской</em> губернии»</h2>
+      <p class="featured-deck">Большой разбор полотна Репина: от заказа до продажи Третьякову. Почему калек оградили палкой, что несёт богатая дама и зачем художнику понадобилось три года на одну толпу.</p>
+      <div class="featured-meta">
+        <span>Илья Репин</span><span>1880—1883</span><span>12 минут чтения</span>
+      </div>
+      <span class="btn-primary" data-hover="view"><span>Читать разбор</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></span>
+    </div>
+  </a>
+</section>
+
+<!-- TABS -->
+<div class="journal-tabs">
+  <div class="tab-list">
+    <button class="tab active" data-tab="all">Всё <span class="tab-count">142</span></button>
+    <button class="tab" data-tab="video"><em>Видео</em> <span class="tab-count">70</span></button>
+    <button class="tab" data-tab="article">Статьи <span class="tab-count">52</span></button>
+    <button class="tab" data-tab="fact"><em>Факты</em> <span class="tab-count">20</span></button>
+  </div>
+  <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft)">Сортировка: новые →</div>
+</div>
+
+<section class="journal-grid">
+
+  <a href="#" class="j-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag video">Видео</span>
+      <span class="j-duration">14:32</span>
+      <div class="j-thumb-inner-frame"></div>
+      <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=900&q=80" alt="Архитектура средневековья">
+      <div class="j-play"><svg><use href="#play"/></svg></div>
+    </div>
+    <div class="j-cat">Архитектура · Эпизод 01</div>
+    <h3 class="j-title">Архитектура <em>средневековья:</em> язык камня</h3>
+    <p class="j-deck">С чего начался ARTEFACT. Романика, готика и почему собор — это всегда больше, чем здание.</p>
+    <div class="j-meta"><span>14 минут</span><span>78K просмотров</span></div>
+  </a>
+
+  <a href="#" class="j-card fact-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag fact">Факт</span>
+      <div class="fact-roman">XLII</div>
+      <div class="fact-label">№ 042 · #ФактИзArtefact</div>
+    </div>
+    <div class="j-cat">Факт · 19 апреля 2026</div>
+    <h3 class="j-title">«Звёздная ночь» <em>не звёздная</em>?</h3>
+    <p class="j-deck">Ван Гог писал её днём, по памяти, в палате психиатрической больницы. Окно выходило не туда, куда закат на полотне.</p>
+    <div class="j-meta"><span>2 минуты</span><span>4.2K реакций</span></div>
+  </a>
+
+  <a href="#" class="j-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag">Статья</span>
+      <div class="j-thumb-inner-frame"></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Birth_of_Venus_by_Sandro_Botticelli.jpg/900px-The_Birth_of_Venus_by_Sandro_Botticelli.jpg" alt="Боттичелли">
+    </div>
+    <div class="j-cat">Разбор · Ренессанс</div>
+    <h3 class="j-title">Боттичелли: <em>Венера</em>, выходящая из ракушки</h3>
+    <p class="j-deck">Кто заказал картину, почему богиня смотрит мимо зрителя и какая поэма Полициано стояла за её композицией.</p>
+    <div class="j-meta"><span>9 мин чтения</span><span>16 апреля</span></div>
+  </a>
+
+  <a href="#" class="j-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag video">Видео</span>
+      <span class="j-duration">22:08</span>
+      <div class="j-thumb-inner-frame"></div>
+      <img src="https://images.unsplash.com/photo-1578321709569-1bbb39e54bca?auto=format&fit=crop&w=900&q=80" alt="Импрессионизм">
+      <div class="j-play"><svg><use href="#play"/></svg></div>
+    </div>
+    <div class="j-cat">Стили · Эпизод 12</div>
+    <h3 class="j-title">Импрессионизм: <em>свет</em> вместо линии</h3>
+    <p class="j-deck">Моне, Ренуар, Дега — как пятно цвета победило академический рисунок и что общего у этого с японской гравюрой.</p>
+    <div class="j-meta"><span>22 минуты</span><span>112K просмотров</span></div>
+  </a>
+
+  <a href="#" class="j-card fact-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag fact">Факт</span>
+      <div class="fact-roman">XLI</div>
+      <div class="fact-label">№ 041 · #ФактИзArtefact</div>
+    </div>
+    <div class="j-cat">Факт · 12 апреля 2026</div>
+    <h3 class="j-title">У Вермеера было <em>11 детей</em></h3>
+    <p class="j-deck">При жизни — почти неизвестен. После смерти жена расплачивалась его картинами с булочником. И эти картины потом стоили миллионы.</p>
+    <div class="j-meta"><span>1 минута</span><span>3.8K реакций</span></div>
+  </a>
+
+  <a href="#" class="j-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag video">Видео</span>
+      <span class="j-duration">18:45</span>
+      <div class="j-thumb-inner-frame"></div>
+      <img src="https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=900&q=80" alt="Леонардо">
+      <div class="j-play"><svg><use href="#play"/></svg></div>
+    </div>
+    <div class="j-cat">Личности · Эпизод 07</div>
+    <h3 class="j-title">Леонардо: <em>записные</em> книжки гения</h3>
+    <p class="j-deck">Около 7000 страниц, написанных зеркальным почерком: летательные машины, анатомия, кулинария — что мы упускаем, разглядывая «Мону Лизу».</p>
+    <div class="j-meta"><span>18 минут</span><span>241K просмотров</span></div>
+  </a>
+
+  <a href="#" class="j-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag">Статья</span>
+      <div class="j-thumb-inner-frame"></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Vermeer-meisje_met_de_parel.jpg/700px-Vermeer-meisje_met_de_parel.jpg" alt="Вермеер">
+    </div>
+    <div class="j-cat">Разбор · Барокко</div>
+    <h3 class="j-title">Вермеер и его <em>15 картин</em></h3>
+    <p class="j-deck">Почему художник, написавший меньше работ, чем Рембрандт за один год, стал одним из самых ценимых имён в истории живописи.</p>
+    <div class="j-meta"><span>11 мин чтения</span><span>5 апреля</span></div>
+  </a>
+
+  <a href="#" class="j-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag video">Видео</span>
+      <span class="j-duration">11:20</span>
+      <div class="j-thumb-inner-frame"></div>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/800px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg" alt="Романтизм">
+      <div class="j-play"><svg><use href="#play"/></svg></div>
+    </div>
+    <div class="j-cat">Стили · Эпизод 18</div>
+    <h3 class="j-title">Романтизм: <em>тоска</em> по бесконечному</h3>
+    <p class="j-deck">Фридрих, Тёрнер, Делакруа. Как природа стала зеркалом души, а художник — пророком.</p>
+    <div class="j-meta"><span>11 минут</span><span>56K просмотров</span></div>
+  </a>
+
+  <a href="#" class="j-card fact-card reveal" data-hover="view">
+    <div class="j-thumb">
+      <span class="j-tag fact">Факт</span>
+      <div class="fact-roman">XL</div>
+      <div class="fact-label">№ 040 · #ФактИзArtefact</div>
+    </div>
+    <div class="j-cat">Факт · 29 марта 2026</div>
+    <h3 class="j-title"><em>Гойя</em> не подписывал «Чёрные картины»</h3>
+    <p class="j-deck">14 фресок художник написал прямо на стенах собственного дома. Найдены и сняты только после его смерти.</p>
+    <div class="j-meta"><span>2 минуты</span><span>2.9K реакций</span></div>
+  </a>
+
+</section>
+
+<!-- LOAD MORE -->
+<div style="text-align:center;padding:0 48px 120px">
+  <button class="btn-primary" data-hover="view"><span>Показать ещё 24</span><span class="btn-arrow"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5 V19 M5 12 L12 19 L19 12"/></svg></span></button>
+</div>
+
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div class="section-tag">Письма из галереи</div>
+    <h2 class="newsletter-title">Получайте <em>истории</em> картин<br>раз в неделю.</h2>
+    <p class="newsletter-text">Один разбор, одна эпоха, одна редкая деталь — каждый вторник.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо ✦'">
+      <input type="email" placeholder="Ваш e-mail" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a href="index.html" class="foot-logo">
+        <img src="logo.svg" alt="ARTEFACT" class="logo-img foot-logo-img">
+      </a>
+      <p class="foot-tag">Просветительский проект об истории искусств. С 2021 — в составе информационного холдинга VAW.</p>
+    </div>
+    <div class="foot-col"><h4>Проект</h4><a href="about.html">О нас</a><a href="about.html#team">Команда</a></div>
+    <div class="foot-col"><h4>Контент</h4><a href="gallery.html">Галерея</a><a href="eras.html">Эпохи</a><a href="journal.html">Журнал</a></div>
+    <div class="foot-col"><h4>Контакты</h4><a href="mailto:artefact.art@mail.ru">artefact.art@mail.ru</a></div>
+  </div>
+  <div class="foot-bottom"><div>© ARTEFACT, MMXXI — MMXXVI · Made by V.Vl</div><div>Москва · Холдинг VAW</div></div>
+</footer>
+
+<script src="main.js"></script>
+<script>
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

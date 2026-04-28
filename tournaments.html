@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Турниры — ARTEFACT</title>
+<meta name="description" content="Открытый турнир по истории искусств — ежегодное дистанционное интеллектуальное состязание ARTEFACT с 2022 года." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+/* ============== TOURNAMENT HERO ============== */
+.t-hero{
+  min-height:88vh;background:var(--obsidian);color:var(--ivory);
+  position:relative;overflow:hidden;padding:140px 48px 80px;
+  display:grid;grid-template-columns:1.2fr 1fr;gap:80px;align-items:center;
+}
+.t-hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 1200px 600px at 30% 30%, rgba(201,162,75,.18), transparent 60%),
+             radial-gradient(ellipse 800px 500px at 80% 80%, rgba(107,31,31,.25), transparent 60%);
+  pointer-events:none;
+}
+.t-hero-bg{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:clamp(180px,28vw,420px);font-weight:300;line-height:.85;
+  color:rgba(201,162,75,.05);white-space:nowrap;letter-spacing:-.04em;pointer-events:none;
+  user-select:none;
+}
+.t-hero-content{position:relative;z-index:2}
+.t-hero-eyebrow{
+  display:inline-flex;align-items:center;gap:14px;
+  font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);
+  margin-bottom:32px;
+}
+.t-hero-eyebrow::before{content:'';width:40px;height:1px;background:var(--gold)}
+.t-hero-eyebrow .badge{
+  background:var(--gold);color:var(--obsidian);padding:4px 10px;border-radius:999px;
+  font-weight:600;letter-spacing:.18em;font-size:10px;
+}
+.t-hero-title{
+  font-family:'Cormorant Garamond',serif;font-weight:300;
+  font-size:clamp(60px,8vw,140px);line-height:.9;letter-spacing:-.02em;
+  margin-bottom:36px;
+}
+.t-hero-title em{
+  font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-light);
+  display:block;
+}
+.t-hero-deck{
+  font-family:'Fraunces',serif;font-weight:300;font-style:italic;
+  font-size:22px;line-height:1.5;color:rgba(244,239,230,.78);max-width:560px;margin-bottom:40px;
+}
+.t-hero-stats{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);max-width:580px;
+}
+.t-hero-stat{padding:24px 28px;background:var(--obsidian)}
+.t-hero-stat .num{
+  font-family:'Cormorant Garamond',serif;font-size:54px;font-weight:300;line-height:1;color:var(--ivory);
+}
+.t-hero-stat .num em{font-style:italic;color:var(--gold);font-family:'Fraunces',serif}
+.t-hero-stat .l{margin-top:6px;font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:rgba(244,239,230,.5)}
+
+/* плакат турнира */
+.t-hero-poster{position:relative;z-index:2}
+.t-poster-frame{
+  position:relative;aspect-ratio:3/4;border-radius:8px;overflow:hidden;
+  background:linear-gradient(180deg, #1a1815, #0e0d0b);
+  border:1px solid rgba(201,162,75,.3);
+  box-shadow:0 60px 120px -40px rgba(0,0,0,.8), 0 0 80px rgba(201,162,75,.15);
+}
+.t-poster-frame::before,.t-poster-frame::after{
+  content:'';position:absolute;width:50%;height:50%;
+  border:1px solid var(--gold);
+}
+.t-poster-frame::before{top:14px;left:14px;border-right:none;border-bottom:none}
+.t-poster-frame::after{bottom:14px;right:14px;border-left:none;border-top:none}
+.t-poster-inner{
+  position:absolute;inset:0;padding:60px 40px;display:flex;flex-direction:column;justify-content:space-between;
+  text-align:center;
+}
+.t-poster-mini{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--gold-light);text-transform:uppercase}
+.t-poster-roman{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(80px,12vw,180px);line-height:.85;color:var(--gold);letter-spacing:-.03em;
+  margin:24px 0;
+}
+.t-poster-divider{
+  display:flex;align-items:center;gap:14px;justify-content:center;
+  font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-light);margin-bottom:14px;
+}
+.t-poster-divider::before, .t-poster-divider::after{
+  content:'';height:1px;flex:1;background:var(--gold);max-width:60px;
+}
+.t-poster-name{
+  font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;line-height:1.15;color:var(--ivory);margin-bottom:16px;
+}
+.t-poster-name em{font-style:italic;color:var(--gold-light);font-family:'Fraunces',serif;font-weight:300}
+.t-poster-foot{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;color:rgba(244,239,230,.4);text-transform:uppercase}
+.t-poster-stamp{
+  position:absolute;top:24px;right:24px;
+  width:78px;height:78px;border-radius:50%;border:1px dashed var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.18em;color:var(--gold);
+  text-align:center;line-height:1.4;text-transform:uppercase;animation:rotate 30s linear infinite;
+}
+@keyframes rotate{to{transform:rotate(360deg)}}
+
+@media (max-width:1100px){
+  .t-hero{grid-template-columns:1fr;gap:60px;padding:100px 32px 60px}
+  .t-hero-stats{max-width:none}
+}
+@media (max-width:700px){
+  .t-hero{padding:80px 20px 48px}
+  .t-hero-stats{grid-template-columns:1fr}
+  .t-hero-stat{padding:18px 22px}
+  .t-hero-stat .num{font-size:42px}
+  .t-poster-frame{aspect-ratio:4/5}
+  .t-poster-inner{padding:40px 20px}
+}
+
+/* ============== ABOUT TOURNAMENT ============== */
+.t-about{
+  padding:140px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start;
+  border-bottom:1px solid var(--line);
+}
+.t-about-head{position:sticky;top:120px}
+.t-about-text p{
+  font-family:'Fraunces',serif;font-weight:300;font-size:19px;line-height:1.6;color:var(--ink);margin-bottom:20px;
+}
+.t-about-text p:first-child::first-letter{
+  float:left;font-family:'Cormorant Garamond',serif;font-weight:500;
+  font-size:84px;line-height:.85;color:var(--gold-2);padding:6px 12px 0 0;
+}
+.t-about-text strong{color:var(--gold-2);font-weight:500}
+@media (max-width:900px){
+  .t-about{padding:80px 20px;grid-template-columns:1fr;gap:48px}
+  .t-about-head{position:static}
+}
+
+/* ============== FORMAT — три тура ============== */
+.t-format{
+  padding:140px 48px;background:var(--ivory-2);position:relative;overflow:hidden;
+}
+.t-format-head{margin-bottom:80px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end}
+.t-format-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;position:relative;z-index:1}
+.t-round{
+  background:var(--ivory);padding:48px 36px;border:1px solid var(--line);position:relative;
+  border-radius:4px;transition:all .5s cubic-bezier(.2,.7,.2,1);
+}
+.t-round:hover{transform:translateY(-8px);box-shadow:0 40px 80px -20px rgba(14,13,11,.18);border-color:var(--gold-2)}
+.t-round::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;transition:transform .6s ease;
+}
+.t-round:hover::before{transform:scaleX(1)}
+.t-round-num{
+  display:inline-block;font-family:'Cormorant Garamond',serif;font-style:italic;
+  font-size:80px;font-weight:300;line-height:1;color:var(--gold-2);margin-bottom:14px;
+}
+.t-round-tag{
+  display:inline-block;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft);
+  padding:4px 12px;border:1px solid var(--line-strong);border-radius:999px;margin-bottom:24px;
+}
+.t-round-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:500;line-height:1.1;color:var(--obsidian);margin-bottom:12px}
+.t-round-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.t-round-time{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;color:var(--gold-2);margin-bottom:20px;text-transform:uppercase}
+.t-round-text{font-family:'Fraunces',serif;font-weight:300;font-size:16px;line-height:1.55;color:var(--ink-soft)}
+.t-round-text strong{color:var(--obsidian);font-weight:500}
+
+@media (max-width:1100px){
+  .t-format-grid{grid-template-columns:1fr;gap:20px}
+  .t-format-head{grid-template-columns:1fr;gap:24px}
+}
+@media (max-width:700px){
+  .t-format{padding:80px 20px}
+  .t-round{padding:32px 24px}
+  .t-round-num{font-size:64px}
+}
+
+/* ============== ARCHIVE — 4 турнира ============== */
+.t-archive{padding:140px 48px;position:relative;overflow:hidden}
+.t-archive-bg{
+  position:absolute;top:60px;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(160px,22vw,360px);line-height:.85;
+  color:var(--ivory-3);letter-spacing:-.03em;pointer-events:none;user-select:none;z-index:0;white-space:nowrap;
+}
+.t-archive-head{margin-bottom:80px;position:relative;z-index:1}
+.t-archive-list{position:relative;z-index:1;display:flex;flex-direction:column}
+
+.t-card{
+  display:grid;grid-template-columns:1fr 1.3fr;gap:60px;align-items:center;
+  padding:60px 0;border-top:1px solid var(--line-strong);position:relative;
+  transition:padding .4s cubic-bezier(.2,.7,.2,1);
+}
+.t-card:hover{padding-left:24px;padding-right:24px;background:var(--ivory-2)}
+.t-card:last-child{border-bottom:1px solid var(--line-strong)}
+.t-card-roman{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:clamp(120px,14vw,220px);line-height:.85;color:var(--obsidian);letter-spacing:-.04em;
+  position:relative;
+  transition:color .4s ease;
+}
+.t-card:hover .t-card-roman{color:var(--gold-2)}
+.t-card-roman .yr{
+  display:block;font-family:'JetBrains Mono',monospace;font-size:14px;font-style:normal;
+  letter-spacing:.32em;color:var(--gold-2);margin-top:12px;
+}
+.t-card-content{display:flex;flex-direction:column}
+.t-card-cat{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-2);margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.t-card-cat::before{content:'';width:30px;height:1px;background:var(--gold-2)}
+.t-card-title{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:42px;line-height:1.1;color:var(--obsidian);margin-bottom:18px}
+.t-card-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.t-card-deck{font-family:'Fraunces',serif;font-weight:300;font-size:17px;line-height:1.55;color:var(--ink-soft);margin-bottom:24px}
+.t-card-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.t-card-meta-item .l{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px}
+.t-card-meta-item .v{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--obsidian)}
+.t-card-meta-item .v em{font-style:italic;color:var(--gold-2);font-family:'Fraunces',serif;font-weight:400}
+.t-card-cta{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.t-card-arrow{
+  width:54px;height:54px;border-radius:50%;border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;color:var(--obsidian);
+  transition:all .4s cubic-bezier(.2,.7,.2,1);
+}
+.t-card:hover .t-card-arrow{background:var(--obsidian);color:var(--ivory);border-color:var(--obsidian);transform:rotate(-12deg)}
+
+@media (max-width:900px){
+  .t-archive{padding:80px 20px}
+  .t-card{grid-template-columns:1fr;gap:24px;padding:40px 0}
+  .t-card:hover{padding-left:0;padding-right:0}
+  .t-card-meta{grid-template-columns:1fr 1fr}
+  .t-card-title{font-size:30px}
+}
+
+/* ============== TOURNAMENT DETAIL EXPANDED ============== */
+.t-detail{
+  background:var(--obsidian);color:var(--ivory);padding:140px 48px;position:relative;overflow:hidden;
+}
+.t-detail::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 1000px 500px at 70% 0%, rgba(201,162,75,.1), transparent 60%);
+  pointer-events:none;
+}
+.t-detail-head{position:relative;z-index:1;margin-bottom:80px;text-align:center}
+.t-detail-head .section-tag{justify-content:center;color:var(--gold-light)}
+.t-detail-head .section-tag::before{background:var(--gold-light)}
+.t-detail-head .section-tag::after{content:'';width:30px;height:1px;background:var(--gold-light)}
+.t-detail-head h2{color:var(--ivory)}
+
+.t-detail-grid{
+  position:relative;z-index:1;display:grid;grid-template-columns:repeat(3,1fr);gap:32px;max-width:1280px;margin:0 auto;
+}
+.t-prize{
+  padding:36px 28px;border:1px solid rgba(255,255,255,.1);border-radius:8px;
+  background:rgba(255,255,255,.02);transition:all .5s cubic-bezier(.2,.7,.2,1);
+}
+.t-prize:hover{transform:translateY(-6px);border-color:rgba(201,162,75,.3);background:rgba(201,162,75,.04)}
+.t-prize-place{
+  font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
+  font-size:46px;line-height:1;color:var(--gold);margin-bottom:14px;
+}
+.t-prize-place .star{color:var(--gold-light);font-style:normal;margin-right:8px}
+.t-prize-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;line-height:1.15;margin-bottom:14px;color:var(--ivory)}
+.t-prize-list{display:flex;flex-direction:column;gap:10px;font-family:'Fraunces',serif;font-weight:300;font-size:15px;line-height:1.4;color:rgba(244,239,230,.75)}
+.t-prize-list strong{color:var(--gold-light);font-weight:500}
+
+@media (max-width:900px){
+  .t-detail{padding:80px 20px}
+  .t-detail-grid{grid-template-columns:1fr;gap:20px}
+}
+
+/* ============== PARTNERS ============== */
+.t-partners{padding:140px 48px;position:relative}
+.t-partners-head{margin-bottom:60px;display:flex;justify-content:space-between;align-items:end;gap:48px;flex-wrap:wrap}
+.t-partners-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.t-partner{
+  cursor:none;text-decoration:none;color:inherit;
+  background:var(--ivory-2);padding:32px 24px;border-radius:4px;
+  border:1px solid var(--line);
+  transition:all .4s cubic-bezier(.2,.7,.2,1);
+  display:flex;flex-direction:column;justify-content:space-between;min-height:200px;
+  position:relative;overflow:hidden;
+}
+.t-partner:hover{
+  transform:translateY(-6px);border-color:var(--gold-2);background:var(--ivory);
+  box-shadow:0 30px 60px -20px rgba(14,13,11,.18);
+}
+.t-partner::before{
+  content:'';position:absolute;top:0;right:0;width:24px;height:24px;
+  background:var(--gold);clip-path:polygon(100% 0, 100% 100%, 0 0);transform:translate(50%,-50%) rotate(45deg);
+  opacity:0;transition:opacity .4s ease;
+}
+.t-partner:hover::before{opacity:1}
+.t-partner-cat{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold-2);margin-bottom:16px}
+.t-partner-name{
+  font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;line-height:1.2;color:var(--obsidian);margin-bottom:12px;
+}
+.t-partner-name em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.t-partner-link{
+  margin-top:auto;display:flex;align-items:center;justify-content:space-between;
+  padding-top:16px;border-top:1px solid var(--line);
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);
+}
+.t-partner-arrow{
+  width:28px;height:28px;border-radius:50%;border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;transition:all .4s ease;
+}
+.t-partner:hover .t-partner-arrow{background:var(--gold);border-color:var(--gold);color:var(--obsidian);transform:rotate(45deg)}
+
+@media (max-width:1100px){.t-partners-grid{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:700px){
+  .t-partners{padding:80px 20px}
+  .t-partners-grid{grid-template-columns:1fr;gap:16px}
+}
+
+/* ============== CTA REGISTRATION ============== */
+.t-cta{
+  padding:140px 48px;background:linear-gradient(135deg, var(--ivory-2), var(--ivory-3));
+  text-align:center;position:relative;overflow:hidden;
+}
+.t-cta::before{
+  content:'⁘';position:absolute;top:60px;left:50%;transform:translateX(-50%);
+  font-family:'Cormorant Garamond',serif;font-size:60px;color:var(--gold);
+}
+.t-cta-inner{max-width:780px;margin:0 auto;position:relative;z-index:1}
+.t-cta-eyebrow{
+  display:inline-flex;align-items:center;gap:14px;
+  font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-2);margin-bottom:24px;
+}
+.t-cta-eyebrow::before, .t-cta-eyebrow::after{content:'';width:30px;height:1px;background:var(--gold-2)}
+.t-cta-title{
+  font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:clamp(48px,6vw,80px);line-height:1;letter-spacing:-.01em;color:var(--obsidian);margin-bottom:28px;
+}
+.t-cta-title em{font-style:italic;font-family:'Fraunces',serif;font-weight:300;color:var(--gold-2)}
+.t-cta-text{font-family:'Fraunces',serif;font-weight:300;font-size:20px;line-height:1.55;color:var(--ink-soft);margin-bottom:48px}
+.t-cta-row{display:flex;justify-content:center;gap:18px;flex-wrap:wrap}
+.t-cta-mail{
+  display:inline-flex;align-items:center;gap:10px;font-family:'Cormorant Garamond',serif;font-size:22px;
+  font-style:italic;color:var(--gold-2);text-decoration:none;border-bottom:1px solid var(--gold);
+  transition:color .3s;
+}
+.t-cta-mail:hover{color:var(--obsidian)}
+
+@media (max-width:700px){
+  .t-cta{padding:80px 20px}
+  .t-cta-row{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<svg style="display:none">
+  <symbol id="arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 L17 7 M9 7 H17 V15"/></symbol>
+  <symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></symbol>
+  <symbol id="trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+    <path d="M6 4 H18 V8 C18 12 15 14 12 14 C9 14 6 12 6 8 V4 Z"/>
+    <path d="M6 6 H3 V8 C3 10 4.5 11 6 11"/>
+    <path d="M18 6 H21 V8 C21 10 19.5 11 18 11"/>
+    <path d="M12 14 V18 M9 18 H15 M8 21 H16"/>
+  </symbol>
+</svg>
+
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <img src="logo.svg" alt="ARTEFACT" class="logo-img">
+  </a>
+  <div class="nav-center">
+    <a href="index.html">Главная</a>
+    <a href="gallery.html">Галерея</a>
+    <a href="eras.html">Эпохи</a>
+    <a href="tournaments.html" class="active">Турниры</a>
+    <a href="about.html">О проекте</a>
+    <a href="journal.html">Журнал</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-dot"></span>
+    <span class="hide-mobile">В эфире</span>
+    <button class="menu-btn" id="menuBtn">Меню <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg></button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">×</button>
+  <div class="menu-inner">
+    <div class="menu-eyebrow">Навигация · ARTEFACT</div>
+    <ul class="menu-links">
+      <li><a href="index.html"><em>I</em> Главная</a></li>
+      <li><a href="gallery.html"><em>II</em> Галерея</a></li>
+      <li><a href="eras.html"><em>III</em> Эпохи</a></li>
+      <li><a href="tournaments.html"><em>IV</em> Турниры</a></li>
+      <li><a href="about.html"><em>V</em> О проекте</a></li>
+      <li><a href="journal.html"><em>VI</em> Журнал</a></li>
+    </ul>
+    <div class="menu-foot"><span>artefact-tournament@mail.ru</span><span>VK · Telegram · YouTube</span></div>
+  </div>
+</div>
+
+<!-- ============== HERO ============== -->
+<section class="t-hero">
+  <div class="t-hero-bg">Tournament</div>
+
+  <div class="t-hero-content">
+    <div class="t-hero-eyebrow"><span class="badge">с 2022</span> ежегодное состязание</div>
+    <h1 class="t-hero-title">
+      Открытый<br>
+      <em>турнир</em><br>
+      по истории<br>
+      искусств.
+    </h1>
+    <p class="t-hero-deck">
+      Дистанционное интеллектуальное состязание для всех желающих. Без ограничений по возрасту, образованию и опыту. Только любопытство и любовь к искусству.
+    </p>
+    <div class="t-hero-stats">
+      <div class="t-hero-stat">
+        <div class="num">IV</div>
+        <div class="l">Турниров проведено</div>
+      </div>
+      <div class="t-hero-stat">
+        <div class="num">3<em>тура</em></div>
+        <div class="l">Этапы испытания</div>
+      </div>
+      <div class="t-hero-stat">
+        <div class="num">2022</div>
+        <div class="l">Год основания</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="t-hero-poster">
+    <div class="t-poster-frame" data-hover="view">
+      <div class="t-poster-stamp">
+        Edition<br>MMXXVI
+      </div>
+      <div class="t-poster-inner">
+        <div>
+          <div class="t-poster-mini">Artefact · Edition</div>
+          <div class="t-poster-roman">IV</div>
+          <div class="t-poster-mini">MMXXV</div>
+        </div>
+        <div>
+          <div class="t-poster-divider">Tournament</div>
+          <div class="t-poster-name">Открытый турнир<br>по истории <em>искусств</em></div>
+          <div class="t-poster-foot">3 тура · ноябрь · онлайн</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ABOUT TOURNAMENT ============== -->
+<section class="t-about">
+  <div class="t-about-head reveal">
+    <div class="section-tag">О турнире · §I</div>
+    <h2 class="section-title">Состязание<br>для <em>каждого</em>.</h2>
+  </div>
+  <div class="t-about-text reveal">
+    <p>Открытый турнир по истории искусств — <strong>ежегодное дистанционное интеллектуальное состязание</strong>, которое проводится с 2022 года. К 2026-му году прошло уже четыре сезона.</p>
+    <p>Цель турнира — развитие интереса к искусству среди людей разных возрастов, улучшение навыков анализа художественных памятников, развитие творческих способностей и популяризация посещения арт-пространств.</p>
+    <p>Организатор турнира — команда <strong>ARTEFACT</strong>. Участником может стать любой человек: <strong>никаких ограничений нет</strong>. Регистрация открывается ежегодно через сайт или форму ВКонтакте, а сам турнир традиционно проходит в ноябре.</p>
+    <p>За три тура участники проходят путь от тестовых вопросов до полноценного авторского проекта — и получают призы от музеев, школ рисования и культурных институций-партнёров.</p>
+  </div>
+</section>
+
+<!-- ============== FORMAT — три тура ============== -->
+<section class="t-format">
+  <div class="t-format-head reveal">
+    <div>
+      <div class="section-tag">Формат · §II</div>
+      <h2 class="section-title">Три тура.<br>Три <em>испытания</em>.</h2>
+    </div>
+    <p style="font-family:'Fraunces',serif;font-weight:300;font-size:18px;line-height:1.55;color:var(--ink-soft);max-width:480px">Турнир проводится онлайн на собственной платформе ARTEFACT. После каждого тура отбираются лучшие участники — и круг сужается.</p>
+  </div>
+
+  <div class="t-format-grid reveal-stagger">
+    <div class="t-round">
+      <div class="t-round-num">I</div>
+      <div class="t-round-tag">Открытый этап</div>
+      <h3 class="t-round-title">Знание <em>фактов</em></h3>
+      <div class="t-round-time">24 часа</div>
+      <p class="t-round-text">Участвуют все зарегистрировавшиеся. За ограниченное время нужно дать ответы на вопросы в <strong>тестовой и развёрнутой форме</strong> — проверяются фактические знания в области истории искусств. По итогам — 1 победитель и призёры (25% всех участников).</p>
+    </div>
+
+    <div class="t-round">
+      <div class="t-round-num">II</div>
+      <div class="t-round-tag">Полуфинал</div>
+      <h3 class="t-round-title">Анализ <em>произведения</em></h3>
+      <div class="t-round-time">24 часа</div>
+      <p class="t-round-text">Участвуют победитель и призёры первого тура. Задача — дать как можно более <strong>полный художественный анализ выбранного произведения искусства</strong>. Проверяется умение читать художественные памятники. По итогам — 1 победитель и 10 призёров.</p>
+    </div>
+
+    <div class="t-round">
+      <div class="t-round-num">III</div>
+      <div class="t-round-tag">Финал</div>
+      <h3 class="t-round-title">Авторский <em>проект</em></h3>
+      <div class="t-round-time">48 часов</div>
+      <p class="t-round-text">Финалисты выполняют проект по выбранной теме — в <strong>любом формате</strong>: статья, эссе, визуальный материал, видео. Готовая работа отправляется на почту <em>artefact-tournament@mail.ru</em>. Жюри определяет тройку призёров.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============== ARCHIVE — 4 турнира ============== -->
+<section class="t-archive">
+  <div class="t-archive-bg">Архив</div>
+  <div class="t-archive-head reveal">
+    <div class="section-tag">Архив · §III</div>
+    <h2 class="section-title">Четыре <em>сезона</em>.<br>Четыре истории.</h2>
+  </div>
+
+  <div class="t-archive-list">
+
+    <a href="#tournament-4" class="t-card reveal" data-hover="view" id="tournament-4-anchor">
+      <div class="t-card-roman">IV<span class="yr">MMXXV · 2025</span></div>
+      <div class="t-card-content">
+        <div class="t-card-cat">IV турнир · Ноябрь 2025</div>
+        <h3 class="t-card-title">Сезон <em>четвёртый.</em></h3>
+        <p class="t-card-deck">Самый масштабный по составу партнёров: Государственный музей Востока, Центр Вознесенского, Музей кино, ArtDreams, Agena Art, гончарная мастерская «Принц и лис» и магазин «Передвижник».</p>
+        <div class="t-card-meta">
+          <div class="t-card-meta-item"><div class="l">Победитель</div><div class="v">Елена <em>Зинченко</em></div></div>
+          <div class="t-card-meta-item"><div class="l">Партнёров</div><div class="v">7</div></div>
+          <div class="t-card-meta-item"><div class="l">Главный приз</div><div class="v">Курсы ArtDreams + Agena Art</div></div>
+          <div class="t-card-meta-item"><div class="l">Финал</div><div class="v">22 — 24 ноября</div></div>
+        </div>
+        <div class="t-card-cta">
+          <span style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-2)">Подробнее о сезоне</span>
+          <span class="t-card-arrow"><svg width="16" height="16"><use href="#arrow-up-right"/></svg></span>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" class="t-card reveal" data-hover="view">
+      <div class="t-card-roman">III<span class="yr">MMXXIV · 2024</span></div>
+      <div class="t-card-content">
+        <div class="t-card-cat">III турнир · Ноябрь 2024</div>
+        <h3 class="t-card-title">Сезон <em>третий.</em></h3>
+        <p class="t-card-deck">Дебют партнёрства с Arzamas: победители получали полугодовые подписки. Главный приз — билеты в Государственный Кремлёвский Дворец и сертификат от Agena Art.</p>
+        <div class="t-card-meta">
+          <div class="t-card-meta-item"><div class="l">Победитель</div><div class="v">Тамара <em>Евтич</em></div></div>
+          <div class="t-card-meta-item"><div class="l">Партнёров</div><div class="v">6</div></div>
+          <div class="t-card-meta-item"><div class="l">Главный приз</div><div class="v">Кремлёвский Дворец + Arzamas</div></div>
+          <div class="t-card-meta-item"><div class="l">Финал</div><div class="v">23 — 25 ноября</div></div>
+        </div>
+        <div class="t-card-cta">
+          <span style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-2)">Архив сезона</span>
+          <span class="t-card-arrow"><svg width="16" height="16"><use href="#arrow-up-right"/></svg></span>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" class="t-card reveal" data-hover="view">
+      <div class="t-card-roman">II<span class="yr">MMXXIII · 2023</span></div>
+      <div class="t-card-content">
+        <div class="t-card-cat">II турнир · Ноябрь 2023</div>
+        <h3 class="t-card-title">Сезон <em>второй.</em></h3>
+        <p class="t-card-deck">Расширение круга музеев: Музей AZ, Михаила Булгакова, Андрея Рублёва, Галерея Глазунова, ЦСИ МАРС. Победительница III тура получила курс олимпиадной школы «Дискурс».</p>
+        <div class="t-card-meta">
+          <div class="t-card-meta-item"><div class="l">Победитель</div><div class="v">Арина <em>Романенко</em></div></div>
+          <div class="t-card-meta-item"><div class="l">Партнёров</div><div class="v">7</div></div>
+          <div class="t-card-meta-item"><div class="l">Главный приз</div><div class="v">Курсы «Дискурс» + Музей Рублёва</div></div>
+          <div class="t-card-meta-item"><div class="l">Финал</div><div class="v">26 — 28 ноября</div></div>
+        </div>
+        <div class="t-card-cta">
+          <span style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-2)">Архив сезона</span>
+          <span class="t-card-arrow"><svg width="16" height="16"><use href="#arrow-up-right"/></svg></span>
+        </div>
+      </div>
+    </a>
+
+    <a href="#" class="t-card reveal" data-hover="view">
+      <div class="t-card-roman">I<span class="yr">MMXXII · 2022</span></div>
+      <div class="t-card-content">
+        <div class="t-card-cat">I турнир · Декабрь 2022</div>
+        <h3 class="t-card-title">Сезон <em>первый.</em></h3>
+        <p class="t-card-deck">С него начался турнир ARTEFACT. Партнёры дебюта — Kalacheva School, ArtDreams, Музей архитектуры им. Щусева и Арт-лекторий. Победитель получил билеты на выставку в МУАР и курс Kalacheva.</p>
+        <div class="t-card-meta">
+          <div class="t-card-meta-item"><div class="l">Победитель</div><div class="v">Ирина <em>Серебрякова</em></div></div>
+          <div class="t-card-meta-item"><div class="l">Партнёров</div><div class="v">4</div></div>
+          <div class="t-card-meta-item"><div class="l">Главный приз</div><div class="v">МУАР + Kalacheva School</div></div>
+          <div class="t-card-meta-item"><div class="l">Финал</div><div class="v">16 — 18 декабря</div></div>
+        </div>
+        <div class="t-card-cta">
+          <span style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold-2)">Архив сезона</span>
+          <span class="t-card-arrow"><svg width="16" height="16"><use href="#arrow-up-right"/></svg></span>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============== DETAIL: PRIZES IV ============== -->
+<section class="t-detail" id="tournament-4">
+  <div class="t-detail-head">
+    <div class="section-tag">IV турнир · §IV</div>
+    <h2 class="section-title">Награды <em>сезона</em><br>2025 года.</h2>
+    <p style="margin-top:24px;font-family:'Fraunces',serif;font-weight:300;font-size:17px;color:rgba(244,239,230,.6);max-width:600px;margin-left:auto;margin-right:auto">Самый щедрый по составу призов турнир — от сертификатов и билетов в музеи до годовых курсов рисования.</p>
+  </div>
+
+  <div class="t-detail-grid">
+    <div class="t-prize">
+      <div class="t-prize-place"><span class="star">⁘</span>I тур</div>
+      <h3 class="t-prize-title">Все участники и <em>призёры</em></h3>
+      <div class="t-prize-list">
+        <div>· Сертификаты участника</div>
+        <div>· <strong>15% скидка</strong> на товары в магазине «Передвижник»</div>
+        <div>· <strong>Победителю:</strong> диплом + билеты на выставку «Светлая Оттепель» в Центре Вознесенского</div>
+      </div>
+    </div>
+
+    <div class="t-prize">
+      <div class="t-prize-place"><span class="star">⁘</span>II тур</div>
+      <h3 class="t-prize-title">Призёры <em>полуфинала</em></h3>
+      <div class="t-prize-list">
+        <div>· <strong>30% скидка</strong> на курсы гончарной мастерской «Принц и лис»</div>
+        <div>· <strong>Победителю:</strong> билеты в Государственный музей Востока</div>
+      </div>
+    </div>
+
+    <div class="t-prize">
+      <div class="t-prize-place"><span class="star">⁘</span>III тур</div>
+      <h3 class="t-prize-title">Финалисты и <em>победитель</em></h3>
+      <div class="t-prize-list">
+        <div>· III место — 2 билета в Музей кино</div>
+        <div>· II место — 2 билета в Музей кино + <strong>80% скидка</strong> на курсы ArtDreams</div>
+        <div>· <strong>Победителю:</strong> любой курс по рисованию ArtDreams + сертификат на 5000 ₽ от Agena Art + 3 билета в Музей кино</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PARTNERS ============== -->
+<section class="t-partners">
+  <div class="t-partners-head reveal">
+    <div>
+      <div class="section-tag">Партнёры · §V</div>
+      <h2 class="section-title">Те, кто <em>поддерживает</em><br>турнир.</h2>
+    </div>
+    <p style="font-family:'Fraunces',serif;font-weight:300;font-size:17px;line-height:1.55;color:var(--ink-soft);max-width:420px">Музеи, школы рисования, культурные центры и магазины товаров для творчества — вместе мы делаем призы, ради которых хочется победить.</p>
+  </div>
+
+  <div class="t-partners-grid reveal-stagger">
+
+    <a href="https://www.orientmuseum.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей</div>
+        <div class="t-partner-name">Государственный музей <em>Востока</em></div>
+      </div>
+      <div class="t-partner-link">orientmuseum.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://www.voznesenskycenter.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Культурный центр</div>
+        <div class="t-partner-name">Центр <em>Вознесенского</em></div>
+      </div>
+      <div class="t-partner-link">voznesenskycenter.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://www.museikino.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей</div>
+        <div class="t-partner-name">Музей <em>кино</em></div>
+      </div>
+      <div class="t-partner-link">museikino.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://schoolartonline.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Школа рисования</div>
+        <div class="t-partner-name">ArtDreams</div>
+      </div>
+      <div class="t-partner-link">schoolartonline.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://agena-art.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Онлайн-академия</div>
+        <div class="t-partner-name">Agena <em>Art</em></div>
+      </div>
+      <div class="t-partner-link">agena-art.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://princulissart.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Гончарная мастерская</div>
+        <div class="t-partner-name">«Принц и <em>лис</em>»</div>
+      </div>
+      <div class="t-partner-link">princulissart.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://www.peredvizhnik.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Магазин для творчества</div>
+        <div class="t-partner-name"><em>«Передвижник»</em></div>
+      </div>
+      <div class="t-partner-link">peredvizhnik.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://arzamas.academy/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Просветительский проект</div>
+        <div class="t-partner-name">Arzamas</div>
+      </div>
+      <div class="t-partner-link">arzamas.academy <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://kremlinpalace.org/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Театральная сцена</div>
+        <div class="t-partner-name">Кремлёвский <em>Дворец</em></div>
+      </div>
+      <div class="t-partner-link">kremlinpalace.org <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://tsaritsyno-museum.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей-заповедник</div>
+        <div class="t-partner-name">«<em>Царицыно</em>»</div>
+      </div>
+      <div class="t-partner-link">tsaritsyno-museum.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://museum-az.com/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей</div>
+        <div class="t-partner-name">Музей <em>AZ</em></div>
+      </div>
+      <div class="t-partner-link">museum-az.com <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://bulgakovmuseum.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей</div>
+        <div class="t-partner-name">Музей М. <em>Булгакова</em></div>
+      </div>
+      <div class="t-partner-link">bulgakovmuseum.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://www.rublev-museum.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей</div>
+        <div class="t-partner-name">Музей А. <em>Рублёва</em></div>
+      </div>
+      <div class="t-partner-link">rublev-museum.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://centermars.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Центр современного искусства</div>
+        <div class="t-partner-name">ЦСИ <em>МАРС</em></div>
+      </div>
+      <div class="t-partner-link">centermars.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://glazunov-gallery.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Галерея</div>
+        <div class="t-partner-name">Галерея И. <em>Глазунова</em></div>
+      </div>
+      <div class="t-partner-link">glazunov-gallery.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://diskurs.school/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Олимпиадная школа</div>
+        <div class="t-partner-name">«<em>Дискурс</em>»</div>
+      </div>
+      <div class="t-partner-link">diskurs.school <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://kalachevaschool.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Школа рисования</div>
+        <div class="t-partner-name">Kalacheva <em>School</em></div>
+      </div>
+      <div class="t-partner-link">kalachevaschool.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://muar.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Музей архитектуры</div>
+        <div class="t-partner-name">МУАР им. <em>Щусева</em></div>
+      </div>
+      <div class="t-partner-link">muar.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://moscow.theatrehd.com/ru/tags/art-in-cinemas" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Кинопрограмма</div>
+        <div class="t-partner-name">Арт-<em>лекторий</em></div>
+      </div>
+      <div class="t-partner-link">theatrehd.com <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+    <a href="https://satire.ru/" target="_blank" rel="noopener" class="t-partner" data-hover="view">
+      <div>
+        <div class="t-partner-cat">Театр</div>
+        <div class="t-partner-name">Театр <em>Сатиры</em></div>
+      </div>
+      <div class="t-partner-link">satire.ru <span class="t-partner-arrow"><svg width="12" height="12"><use href="#arrow-up-right"/></svg></span></div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============== CTA REGISTRATION ============== -->
+<section class="t-cta">
+  <div class="t-cta-inner reveal">
+    <div class="t-cta-eyebrow">Сезон V · MMXXVI</div>
+    <h2 class="t-cta-title">Хотите <em>участвовать</em><br>в следующем сезоне?</h2>
+    <p class="t-cta-text">Регистрация на пятый турнир откроется осенью 2026 года. Подпишитесь, чтобы первыми узнать дату старта — и подготовиться к первому туру заранее.</p>
+    <div class="t-cta-row">
+      <a href="#" class="btn-primary" data-hover="view">
+        <span>Узнать о старте</span>
+        <span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </a>
+      <a href="mailto:artefact-tournament@mail.ru" class="t-cta-mail" data-hover="view">
+        artefact-tournament@mail.ru
+        <svg width="14" height="14"><use href="#arrow-up-right"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div class="section-tag">Письма из галереи</div>
+    <h2 class="newsletter-title">Получайте <em>истории</em> картин<br>раз в неделю.</h2>
+    <p class="newsletter-text">Один разбор, одна эпоха, одна редкая деталь — каждый вторник.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо ✦'">
+      <input type="email" placeholder="Ваш e-mail" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a href="index.html" class="foot-logo">
+        <img src="logo.svg" alt="ARTEFACT" class="logo-img foot-logo-img">
+      </a>
+      <p class="foot-tag">Просветительский проект об истории искусств. С 2021 — в составе информационного холдинга VAW.</p>
+      <div class="foot-socials">
+        <a href="https://vk.com/artefactam" class="foot-soc" data-hover="view" aria-label="VK"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.785 16.241s.288-.032.435-.193c.135-.148.131-.422.131-.422s-.018-1.288.575-1.481c.585-.193 1.336 1.288 2.131 1.853.602.428 1.058.337 1.058.337l2.123-.032s1.111-.07.583-.953c-.043-.072-.308-.65-1.585-1.85-1.34-1.255-1.16-1.052.452-3.218 1.179-1.583 1.65-2.55 1.502-2.965-.139-.397-.997-.292-.997-.292l-2.85.018s-.211-.029-.367.067c-.153.094-.252.314-.252.314s-.45 1.213-1.05 2.246c-1.27 2.18-1.778 2.295-1.985 2.158-.483-.317-.363-1.278-.363-1.96 0-2.134.32-3.024-.624-3.255-.313-.077-.544-.128-1.346-.137-1.029-.011-1.9.003-2.395.245-.328.16-.582.518-.428.539.19.026.62.117.85.43.298.404.288 1.31.288 1.31s.171 2.529-.4 2.844c-.394.215-.93-.225-2.066-2.197-.582-1.013-1.022-2.131-1.022-2.131s-.083-.205-.234-.314c-.182-.131-.437-.173-.437-.173l-2.706.018s-.408.011-.557.187c-.133.156-.011.479-.011.479s2.117 4.964 4.518 7.474c2.197 2.297 4.69 2.146 4.69 2.146h1.131z"/></svg></a>
+        <a href="https://t.me/ARTEFACTAM" class="foot-soc" data-hover="view" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.485 2 2 6.485 2 12s4.485 10 10 10 10-4.485 10-10S17.515 2 12 2zm4.526 7.071l-1.503 7.084c-.114.5-.41.624-.832.388l-2.297-1.694-1.108 1.067c-.123.122-.227.226-.464.226l.166-2.353 4.282-3.872c.186-.166-.04-.258-.289-.092l-5.291 3.331-2.281-.713c-.495-.155-.505-.495.103-.732l8.92-3.44c.413-.151.774.099.594.8z"/></svg></a>
+        <a href="https://www.youtube.com/channel/UCxVeixiBg8rmoQ30OiCyPHw" class="foot-soc" data-hover="view" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.506 2.506 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814a2.506 2.506 0 0 0 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418a2.506 2.506 0 0 0 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15.464V8.536L16 12l-6 3.464z"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-col"><h4>Проект</h4><a href="about.html">О нас</a><a href="about.html#team">Команда</a></div>
+    <div class="foot-col"><h4>Контент</h4><a href="gallery.html">Галерея</a><a href="eras.html">Эпохи</a><a href="tournaments.html">Турниры</a><a href="journal.html">Журнал</a></div>
+    <div class="foot-col"><h4>Контакты</h4><a href="mailto:artefact.art@mail.ru">artefact.art@mail.ru</a><a href="mailto:artefact-tournament@mail.ru">Турнир</a></div>
+  </div>
+  <div class="foot-bottom"><div>© ARTEFACT, MMXXI — MMXXVI · Made by V.Vl</div><div>Москва · Холдинг VAW</div></div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

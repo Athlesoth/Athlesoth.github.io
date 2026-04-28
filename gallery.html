@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Галерея — ARTEFACT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+<div class="gallery-preview" id="galleryPreview"></div>
+
+<svg style="display:none">
+  <symbol id="star4" viewBox="0 0 24 24"><path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z"/></symbol>
+  <symbol id="arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 L17 7 M9 7 H17 V15"/></symbol>
+  <symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></symbol>
+</svg>
+
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <img src="logo.svg" alt="ARTEFACT" class="logo-img">
+  </a>
+  <div class="nav-center">
+    <a href="index.html">Главная</a>
+    <a href="gallery.html" class="active">Галерея</a>
+    <a href="eras.html">Эпохи</a>
+    <a href="tournaments.html">Турниры</a>
+    <a href="journal.html">Журнал</a>
+    <a href="about.html">О проекте</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-dot"></span>
+    <span class="hide-mobile">В эфире</span>
+    <button class="menu-btn" id="menuBtn">
+      Меню <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">×</button>
+  <div class="menu-inner">
+    <div class="menu-eyebrow">Навигация · ARTEFACT</div>
+    <ul class="menu-links">
+      <li><a href="index.html"><em>I</em> Главная</a></li>
+      <li><a href="gallery.html"><em>II</em> Галерея</a></li>
+      <li><a href="eras.html"><em>III</em> Эпохи</a></li>
+      <li><a href="tournaments.html"><em>IV</em> Турниры</a></li>
+      <li><a href="journal.html"><em>V</em> Журнал</a></li>
+      <li><a href="about.html"><em>VI</em> О проекте</a></li>
+    </ul>
+    <div class="menu-foot">
+      <span>artefact.art@mail.ru</span>
+      <span>VK · Telegram · YouTube</span>
+    </div>
+  </div>
+</div>
+
+<section class="page-head">
+  <div class="page-head-inner">
+    <div>
+      <div class="crumb"><a href="index.html">ARTEFACT</a><span class="crumb-sep"></span><span>Галерея · §II</span></div>
+      <h1 class="page-title">Тихая <em>галерея</em><br>громких полотен.</h1>
+    </div>
+    <p class="page-deck">Авторская коллекция шедевров — от иконы XII века до манифестов модерна. Все работы можно рассмотреть в деталях, прочитать историю и узнать, что осталось за рамой.</p>
+  </div>
+</section>
+
+<section class="gallery-section">
+  <div class="gallery-controls">
+    <div class="filter-pills">
+      <button class="filter-pill active" data-filter="all">Все · 24</button>
+      <button class="filter-pill" data-filter="renaissance">Ренессанс</button>
+      <button class="filter-pill" data-filter="baroque">Барокко</button>
+      <button class="filter-pill" data-filter="russian">Русское</button>
+      <button class="filter-pill" data-filter="impressionism">Импрессионизм</button>
+      <button class="filter-pill" data-filter="modern">Модерн</button>
+    </div>
+    <div class="gallery-count">№ 001—024 / собрание</div>
+  </div>
+
+  <div class="gallery-grid">
+    <a href="#" class="gal-item s-tall" data-cat="russian" data-hover="view">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Ilya_Repin_-_%D0%9A%D1%80%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9_%D1%85%D0%BE%D0%B4_%D0%B2_%D0%9A%D1%83%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%B3%D1%83%D0%B1%D0%B5%D1%80%D0%BD%D0%B8%D0%B8_-_Google_Art_Project.jpg/1200px-Ilya_Repin_-_%D0%9A%D1%80%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9_%D1%85%D0%BE%D0%B4_%D0%B2_%D0%9A%D1%83%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%B3%D1%83%D0%B1%D0%B5%D1%80%D0%BD%D0%B8%D0%B8_-_Google_Art_Project.jpg" alt="Крестный ход в Курской губернии">
+      <div class="gal-item-num">№ 001</div>
+      <div class="gal-item-cat">Русское · 1883</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title"><em>«Крестный ход</em><br>в Курской губернии»</div>
+        <div class="gal-item-author">Илья Репин</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-square" data-cat="renaissance" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=900&q=80" alt="Портрет Ренессанса">
+      <div class="gal-item-num">№ 002</div>
+      <div class="gal-item-cat">Ренессанс · 1503</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Портрет дамы<br>в <em>гранатах</em></div>
+        <div class="gal-item-author">Школа да Винчи</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-square" data-cat="baroque" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=900&q=80" alt="Барочный портрет">
+      <div class="gal-item-num">№ 003</div>
+      <div class="gal-item-cat">Барокко · 1632</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Юноша<br>с <em>книгой</em></div>
+        <div class="gal-item-author">Круг Рембрандта</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-wide" data-cat="impressionism" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1578321709569-1bbb39e54bca?auto=format&fit=crop&w=1400&q=80" alt="Импрессионизм">
+      <div class="gal-item-num">№ 004</div>
+      <div class="gal-item-cat">Импрессионизм · 1874</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Утренний <em>пейзаж</em><br>с фигурами</div>
+        <div class="gal-item-author">Клод Моне (?)</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-mid" data-cat="modern" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&w=900&q=80" alt="Модерн">
+      <div class="gal-item-num">№ 005</div>
+      <div class="gal-item-cat">Модерн · 1907</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Орнамент<br>и <em>тишина</em></div>
+        <div class="gal-item-author">Альфонс Муха</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-small" data-cat="russian" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1509909756405-be0199881695?auto=format&fit=crop&w=600&q=80" alt="Натюрморт">
+      <div class="gal-item-num">№ 006</div>
+      <div class="gal-item-cat">Натюрморт · XIX в.</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Цветы<br>в <em>хрустале</em></div>
+        <div class="gal-item-author">И. Хруцкий</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-mid" data-cat="renaissance" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1577083553258-d9a96bf99b46?auto=format&fit=crop&w=900&q=80" alt="Ренессансная фреска">
+      <div class="gal-item-num">№ 007</div>
+      <div class="gal-item-cat">Ренессанс · 1485</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title"><em>Ангелы</em><br>и пейзаж Тосканы</div>
+        <div class="gal-item-author">Боттичелли (фрагмент)</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-square" data-cat="baroque" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=900&q=80" alt="Готический витраж">
+      <div class="gal-item-num">№ 008</div>
+      <div class="gal-item-cat">Готика · XIV в.</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Витраж<br><em>Шартра</em></div>
+        <div class="gal-item-author">Анонимный мастер</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-tall" data-cat="russian" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1577720643272-265f09367456?auto=format&fit=crop&w=900&q=80" alt="Русское искусство">
+      <div class="gal-item-num">№ 009</div>
+      <div class="gal-item-cat">Русское · 1872</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title"><em>Боярыня</em><br>у окна</div>
+        <div class="gal-item-author">В. Суриков</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-wide" data-cat="impressionism" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1547333101-92ed79f74cba?auto=format&fit=crop&w=1400&q=80" alt="Танцовщица">
+      <div class="gal-item-num">№ 010</div>
+      <div class="gal-item-cat">Импрессионизм · 1879</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Танцовщица<br>в <em>репетиционном зале</em></div>
+        <div class="gal-item-author">Эдгар Дега</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-square" data-cat="modern" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1565060169187-5284a3b1a8b6?auto=format&fit=crop&w=900&q=80" alt="Модерн фрагмент">
+      <div class="gal-item-num">№ 011</div>
+      <div class="gal-item-cat">Модерн · 1903</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title">Поцелуй<br>в <em>золоте</em></div>
+        <div class="gal-item-author">Г. Климт (этюд)</div>
+      </div>
+    </a>
+
+    <a href="#" class="gal-item s-mid" data-cat="baroque" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=900&q=80" alt="Готический собор">
+      <div class="gal-item-num">№ 012</div>
+      <div class="gal-item-cat">Архитектура · XIII в.</div>
+      <div class="gal-item-info">
+        <div class="gal-item-title"><em>Стрельчатый</em><br>свод собора</div>
+        <div class="gal-item-author">Реймс, фрагмент</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div class="section-tag">Письма из галереи</div>
+    <h2 class="newsletter-title">Понравилось?<br><em>Подпишитесь</em>.</h2>
+    <p class="newsletter-text">Каждый вторник — один разбор полотна и одна редкая деталь.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо ✦'">
+      <input type="email" placeholder="Ваш e-mail" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a href="index.html" class="foot-logo">
+        <img src="logo.svg" alt="ARTEFACT" class="logo-img foot-logo-img">
+      </a>
+      <p class="foot-tag">Просветительский проект об истории искусств. С 2021 — в составе информационного холдинга VAW.</p>
+      <div class="foot-socials">
+        <a href="https://vk.com/artefactam" class="foot-soc" data-hover="view" aria-label="VK"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.785 16.241s.288-.032.435-.193c.135-.148.131-.422.131-.422s-.018-1.288.575-1.481c.585-.193 1.336 1.288 2.131 1.853.602.428 1.058.337 1.058.337l2.123-.032s1.111-.07.583-.953c-.043-.072-.308-.65-1.585-1.85-1.34-1.255-1.16-1.052.452-3.218 1.179-1.583 1.65-2.55 1.502-2.965-.139-.397-.997-.292-.997-.292l-2.85.018s-.211-.029-.367.067c-.153.094-.252.314-.252.314s-.45 1.213-1.05 2.246c-1.27 2.18-1.778 2.295-1.985 2.158-.483-.317-.363-1.278-.363-1.96 0-2.134.32-3.024-.624-3.255-.313-.077-.544-.128-1.346-.137-1.029-.011-1.9.003-2.395.245-.328.16-.582.518-.428.539.19.026.62.117.85.43.298.404.288 1.31.288 1.31s.171 2.529-.4 2.844c-.394.215-.93-.225-2.066-2.197-.582-1.013-1.022-2.131-1.022-2.131s-.083-.205-.234-.314c-.182-.131-.437-.173-.437-.173l-2.706.018s-.408.011-.557.187c-.133.156-.011.479-.011.479s2.117 4.964 4.518 7.474c2.197 2.297 4.69 2.146 4.69 2.146h1.131z"/></svg></a>
+        <a href="https://t.me/ARTEFACTAM" class="foot-soc" data-hover="view" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.485 2 2 6.485 2 12s4.485 10 10 10 10-4.485 10-10S17.515 2 12 2zm4.526 7.071l-1.503 7.084c-.114.5-.41.624-.832.388l-2.297-1.694-1.108 1.067c-.123.122-.227.226-.464.226l.166-2.353 4.282-3.872c.186-.166-.04-.258-.289-.092l-5.291 3.331-2.281-.713c-.495-.155-.505-.495.103-.732l8.92-3.44c.413-.151.774.099.594.8z"/></svg></a>
+        <a href="https://www.youtube.com/channel/UCxVeixiBg8rmoQ30OiCyPHw" class="foot-soc" data-hover="view" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.506 2.506 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814a2.506 2.506 0 0 0 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418a2.506 2.506 0 0 0 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15.464V8.536L16 12l-6 3.464z"/></svg></a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h4>Проект</h4>
+      <a href="about.html">О нас</a>
+      <a href="about.html#team">Команда</a>
+      <a href="#">Холдинг VAW</a>
+    </div>
+    <div class="foot-col">
+      <h4>Контент</h4>
+      <a href="gallery.html">Галерея</a>
+      <a href="eras.html">Эпохи</a>
+      <a href="journal.html">Журнал</a>
+    </div>
+    <div class="foot-col">
+      <h4>Контакты</h4>
+      <a href="mailto:artefact.art@mail.ru">artefact.art@mail.ru</a>
+      <a href="#">Стать автором</a>
+      <a href="#">Политика</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <div>© ARTEFACT, MMXXI — MMXXVI · Made by V.Vl</div>
+    <div>Москва · Холдинг VAW</div>
+  </div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

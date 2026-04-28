@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Эпохи — ARTEFACT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.timeline{
+  padding:60px 48px 0;position:relative;
+}
+.timeline-axis{
+  position:relative;height:80px;display:flex;align-items:center;
+  border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);
+  margin-bottom:80px;
+}
+.timeline-axis::before{
+  content:'';position:absolute;left:0;right:0;top:50%;height:1px;
+  background:repeating-linear-gradient(90deg,var(--line-strong) 0 1px,transparent 1px 8px);
+}
+.timeline-marker{
+  position:absolute;top:50%;transform:translate(-50%,-50%);
+  background:var(--ivory);padding:12px 16px;border:1px solid var(--line-strong);
+  border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;
+  color:var(--ink);
+}
+.timeline-marker.gold{background:var(--gold);color:var(--obsidian);border-color:var(--gold);font-weight:600}
+
+.era-section{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  padding:120px 48px;border-bottom:1px solid var(--line);position:relative;
+}
+.era-section:nth-child(even){background:var(--ivory-2)}
+.era-section.dark{background:var(--obsidian);color:var(--ivory)}
+.era-section.dark .era-section-title{color:var(--ivory)}
+.era-section.dark .era-section-text{color:rgba(244,239,230,.75)}
+.era-section.dark .era-section-tag{color:var(--gold-light)}
+.era-section.dark .era-section-tag::before{background:var(--gold-light)}
+.era-section.dark .era-meta{border-color:rgba(255,255,255,.12)}
+.era-section.dark .era-meta-item .l{color:rgba(244,239,230,.5)}
+.era-section.dark .era-meta-item .v{color:var(--ivory)}
+
+.era-section.reverse .era-section-img{order:2}
+.era-section-img{position:relative;aspect-ratio:3/4;border-radius:300px 300px 4px 4px;overflow:hidden}
+.era-section-img img{width:100%;height:100%;object-fit:cover;transition:transform 1.5s ease;filter:saturate(.92)}
+.era-section-img:hover img{transform:scale(1.06)}
+.era-section-img::before{content:'';position:absolute;inset:0;border:1px solid rgba(255,255,255,.15);border-radius:inherit;z-index:2;pointer-events:none}
+.era-section-img::after{
+  content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(14,13,11,.4));z-index:1;pointer-events:none;
+}
+.era-section-roman{
+  position:absolute;top:32px;left:50%;transform:translateX(-50%);z-index:3;
+  font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:.4em;color:var(--gold-light);
+}
+.era-section-no{
+  position:absolute;bottom:24px;right:24px;z-index:3;color:var(--ivory);
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;
+  background:rgba(14,13,11,.5);backdrop-filter:blur(6px);padding:6px 10px;border-radius:999px;
+}
+
+.era-section-content .section-tag,.era-section-content .era-section-tag{
+  font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold-2);
+  display:inline-flex;align-items:center;gap:14px;margin-bottom:24px;
+}
+.era-section-content .section-tag::before,.era-section-content .era-section-tag::before{content:'';width:30px;height:1px;background:var(--gold-2)}
+
+.era-section-title{
+  font-family:'Cormorant Garamond',serif;font-weight:400;
+  font-size:clamp(48px,6vw,96px);line-height:.95;letter-spacing:-.01em;color:var(--obsidian);margin-bottom:16px;
+}
+.era-section-title em{font-style:italic;color:var(--gold-2);font-family:'Fraunces',serif;font-weight:300}
+.era-section-dates{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:300;font-size:24px;color:var(--ink-soft);margin-bottom:32px;
+}
+.era-section-text{
+  font-family:'Fraunces',serif;font-weight:300;font-size:18px;line-height:1.6;color:var(--ink);margin-bottom:28px;
+}
+.era-meta{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:20px 0;margin-bottom:28px;
+}
+.era-meta-item .l{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:4px}
+.era-meta-item .v{font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--obsidian)}
+
+@media (max-width:900px){
+  .timeline{padding:32px 20px 0;display:none}
+  .era-section{grid-template-columns:1fr;gap:48px;padding:60px 20px}
+  .era-section.reverse .era-section-img{order:0}
+  .era-section-img{aspect-ratio:4/5;border-radius:120px 120px 4px 4px}
+  .era-meta{grid-template-columns:1fr 1fr;gap:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<svg style="display:none">
+  <symbol id="star4" viewBox="0 0 24 24"><path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z"/></symbol>
+  <symbol id="arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 L17 7 M9 7 H17 V15"/></symbol>
+</svg>
+
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <img src="logo.svg" alt="ARTEFACT" class="logo-img">
+  </a>
+  <div class="nav-center">
+    <a href="index.html">Главная</a>
+    <a href="gallery.html">Галерея</a>
+    <a href="eras.html" class="active">Эпохи</a>
+    <a href="tournaments.html">Турниры</a>
+    <a href="about.html">O проекте</a>
+    <a href="journal.html">Журнал</a>
+  </div>
+  <div class="nav-right">
+    <span class="live-dot"></span>
+    <span class="hide-mobile">В эфире</span>
+    <button class="menu-btn" id="menuBtn">Меню <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg></button>
+  </div>
+</nav>
+
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">×</button>
+  <div class="menu-inner">
+    <div class="menu-eyebrow">Навигация · ARTEFACT</div>
+    <ul class="menu-links">
+      <li><a href="index.html"><em>I</em> Главная</a></li>
+      <li><a href="gallery.html"><em>II</em> Галерея</a></li>
+      <li><a href="eras.html"><em>III</em> Эпохи</a></li>
+      <li><a href="tournaments.html"><em>IV</em> Турниры</a></li>
+      <li><a href="about.html"><em>V</em> О проекте</a></li>
+      <li><a href="journal.html"><em>VI</em> Журнал</a></li>
+    </ul>
+    <div class="menu-foot"><span>artefact.art@mail.ru</span><span>VK · Telegram · YouTube</span></div>
+  </div>
+</div>
+
+<section class="page-head">
+  <div class="page-head-inner">
+    <div>
+      <div class="crumb"><a href="index.html">Главная</a><span class="crumb-sep"></span><span>Эпохи</span></div>
+      <h1 class="page-title">От романики<br>до <em>модерна</em>.</h1>
+    </div>
+    <p class="page-deck">Тысячелетие искусства, разложенное по полкам. Каждая эпоха — это отдельный язык, которым люди говорили о Боге, человеке и красоте. Прокрутите вниз, чтобы пройти этот путь.</p>
+  </div>
+</section>
+
+<!-- TIMELINE -->
+<div class="timeline">
+  <div class="timeline-axis">
+    <div class="timeline-marker" style="left:5%">X</div>
+    <div class="timeline-marker" style="left:18%">XII</div>
+    <div class="timeline-marker gold" style="left:30%">XIII</div>
+    <div class="timeline-marker" style="left:42%">XV</div>
+    <div class="timeline-marker" style="left:54%">XVI</div>
+    <div class="timeline-marker gold" style="left:66%">XVII</div>
+    <div class="timeline-marker" style="left:78%">XIX</div>
+    <div class="timeline-marker" style="left:92%">XX</div>
+  </div>
+</div>
+
+<!-- РОМАНИКА -->
+<section class="era-section">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">I</div>
+    <img src="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=80" alt="Романика">
+    <div class="era-section-no">№ 001 / X—XII</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · I</div>
+    <h2 class="era-section-title"><em>Романика</em></h2>
+    <p class="era-section-dates">X — XII век</p>
+    <p class="era-section-text">Эпоха толстых стен, узких окон и каменной тишины. Романские базилики кажутся крепостями: массивные колонны, полуциркульные своды, скульптура подчинена архитектуре. Это искусство веры — суровой, концентрированной, без лишнего слова.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Полуциркульный свод</div></div>
+      <div class="era-meta-item"><div class="l">Материал</div><div class="v">Камень / мозаика</div></div>
+      <div class="era-meta-item"><div class="l">Символ эпохи</div><div class="v">Базилика-крепость</div></div>
+      <div class="era-meta-item"><div class="l">Имя</div><div class="v">Аббат Сугерий</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<!-- ГОТИКА -->
+<section class="era-section dark reverse">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">II</div>
+    <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=900&q=80" alt="Готика">
+    <div class="era-section-no">№ 002 / XII—XV</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · II</div>
+    <h2 class="era-section-title">Готика</h2>
+    <p class="era-section-dates">сер. XII — XV век</p>
+    <p class="era-section-text">Стены становятся прозрачными. Стрельчатый свод, аркбутаны и контрфорсы освобождают пространство для огромных витражей — Бог говорит светом. Шартр, Реймс, Нотр-Дам: вертикали тянутся к небу так настойчиво, что кажется, будто архитектура хочет оторваться от земли.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Стрельчатый свод</div></div>
+      <div class="era-meta-item"><div class="l">Материал</div><div class="v">Камень / витраж</div></div>
+      <div class="era-meta-item"><div class="l">Символ эпохи</div><div class="v">Собор-небо</div></div>
+      <div class="era-meta-item"><div class="l">Имя</div><div class="v">Жан де Шель</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<!-- ПРОТОРЕНЕССАНС -->
+<section class="era-section">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">III</div>
+    <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?auto=format&fit=crop&w=900&q=80" alt="Проторенессанс">
+    <div class="era-section-no">№ 003 / XIII—XIV</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · III</div>
+    <h2 class="era-section-title"><em>Прото-</em>ренессанс</h2>
+    <p class="era-section-dates">XIII — XIV век</p>
+    <p class="era-section-text">Джотто рисует слёзы — не символ, а человеческую слёзку. Это и есть переворот: впервые после античности живопись говорит о людях так, словно они — главные. Пространство капеллы Скровеньи становится сценой, а не плоской иконой.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Объём, эмоция</div></div>
+      <div class="era-meta-item"><div class="l">Материал</div><div class="v">Фреска / темпера</div></div>
+      <div class="era-meta-item"><div class="l">Символ</div><div class="v">Капелла Скровеньи</div></div>
+      <div class="era-meta-item"><div class="l">Имя</div><div class="v">Джотто</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<!-- РЕНЕССАНС -->
+<section class="era-section dark reverse">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">IV</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/40/The_Birth_of_Venus_by_Sandro_Botticelli.jpg/900px-The_Birth_of_Venus_by_Sandro_Botticelli.jpg" alt="Ренессанс">
+    <div class="era-section-no">№ 004 / XV—XVI</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · IV</div>
+    <h2 class="era-section-title">Ренессанс</h2>
+    <p class="era-section-dates">XV — XVI век</p>
+    <p class="era-section-text">Леонардо, Микеланджело, Рафаэль. Перспектива, анатомия, идеальная пропорция — но за всем стоит главное открытие: человек снова в центре мира. Художник перестаёт быть ремесленником и становится фигурой, равной поэту и философу.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Линейная перспектива</div></div>
+      <div class="era-meta-item"><div class="l">Материал</div><div class="v">Масло / холст</div></div>
+      <div class="era-meta-item"><div class="l">Символ</div><div class="v">Сикстинская капелла</div></div>
+      <div class="era-meta-item"><div class="l">Имена</div><div class="v">Леонардо · Микеланджело</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<!-- БАРОККО -->
+<section class="era-section">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">V</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Vermeer-meisje_met_de_parel.jpg/900px-Vermeer-meisje_met_de_parel.jpg" alt="Барокко">
+    <div class="era-section-no">№ 005 / XVII</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · V</div>
+    <h2 class="era-section-title"><em>Барокко</em></h2>
+    <p class="era-section-dates">XVII век</p>
+    <p class="era-section-text">Свет вырывает фигуры из темноты — Караваджо, Рембрандт, Вермеер. Эмоция становится театром, движение — драмой. Барокко не боится излишества: вихри тканей, экстазы святых, золото и плоть, всё на пределе.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Светотень / тенебризм</div></div>
+      <div class="era-meta-item"><div class="l">Материал</div><div class="v">Масло / холст</div></div>
+      <div class="era-meta-item"><div class="l">Символ</div><div class="v">Купол Сан-Карло</div></div>
+      <div class="era-meta-item"><div class="l">Имя</div><div class="v">Караваджо · Бернини</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<!-- РОМАНТИЗМ -->
+<section class="era-section dark reverse">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">VI</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg/800px-Caspar_David_Friedrich_-_Wanderer_above_the_sea_of_fog.jpg" alt="Романтизм">
+    <div class="era-section-no">№ 006 / XIX</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · VI</div>
+    <h2 class="era-section-title">Романтизм</h2>
+    <p class="era-section-dates">конец XVIII — сер. XIX</p>
+    <p class="era-section-text">Природа становится зеркалом души. Странник стоит над морем тумана — и не побеждает, а смотрит. Тёрнер растворяет корабли в свете, Делакруа выводит свободу на баррикады. Чувство важнее разума, гений важнее правил.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Атмосфера / свет</div></div>
+      <div class="era-meta-item"><div class="l">Тема</div><div class="v">Природа / свобода</div></div>
+      <div class="era-meta-item"><div class="l">Символ</div><div class="v">Море тумана</div></div>
+      <div class="era-meta-item"><div class="l">Имена</div><div class="v">Фридрих · Тёрнер · Делакруа</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<!-- МОДЕРН -->
+<section class="era-section">
+  <div class="era-section-img reveal" data-hover="view">
+    <div class="era-section-roman">VII</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Gustav_Klimt_016.jpg/800px-Gustav_Klimt_016.jpg" alt="Модерн">
+    <div class="era-section-no">№ 007 / 1890—1910</div>
+  </div>
+  <div class="era-section-content reveal">
+    <div class="era-section-tag">Эпоха · VII</div>
+    <h2 class="era-section-title"><em>Модерн</em></h2>
+    <p class="era-section-dates">1890 — 1910</p>
+    <p class="era-section-text">Линия становится главной героиней. Климт золотит поцелуй, Муха рисует женщин-цветы, Гауди превращает дома в живые организмы. Модерн ищет красоту повсюду: в бабочке, в волосах, в ножке стула — и стирает границу между искусством и жизнью.</p>
+    <div class="era-meta">
+      <div class="era-meta-item"><div class="l">Главный приём</div><div class="v">Текучая линия</div></div>
+      <div class="era-meta-item"><div class="l">Материал</div><div class="v">Все материалы</div></div>
+      <div class="era-meta-item"><div class="l">Символ</div><div class="v">Метро Парижа</div></div>
+      <div class="era-meta-item"><div class="l">Имена</div><div class="v">Климт · Муха · Гауди</div></div>
+    </div>
+    <a href="gallery.html" class="btn-primary" data-hover="view"><span>Работы эпохи</span><span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span></a>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div class="section-tag">Письма из галереи</div>
+    <h2 class="newsletter-title">Получайте <em>истории</em> картин<br>раз в неделю.</h2>
+    <p class="newsletter-text">Один разбор, одна эпоха, одна редкая деталь — каждый вторник.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо ✦'">
+      <input type="email" placeholder="Ваш e-mail" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a href="index.html" class="foot-logo">
+        <img src="logo.svg" alt="ARTEFACT" class="logo-img foot-logo-img">
+      </a>
+      <p class="foot-tag">Просветительский проект об истории искусств. С 2021 — в составе информационного холдинга VAW.</p>
+    </div>
+    <div class="foot-col"><h4>Проект</h4><a href="about.html">О нас</a><a href="about.html">Команда</a></div>
+    <div class="foot-col"><h4>Контент</h4><a href="gallery.html">Галерея</a><a href="eras.html">Эпохи</a><a href="journal.html">Журнал</a></div>
+    <div class="foot-col"><h4>Контакты</h4><a href="mailto:artefact.art@mail.ru">artefact.art@mail.ru</a></div>
+  </div>
+  <div class="foot-bottom"><div>© ARTEFACT, MMXXI — MMXXVI</div><div>Москва · Холдинг VAW</div></div>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
