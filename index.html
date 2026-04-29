@@ -1,1463 +1,491 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Elyptix Limited — Automate. Integrate. Scale.</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,700;0,800;1,500;1,700&family=DM+Sans:wght@400;500;600&display=swap');
-
-  :root{
-    --bg: #040608;
-    --bg-2: #07100f;
-    --ink: #e8f1ef;
-    --ink-dim: #8a9794;
-    --ink-mute: #5b6663;
-    --line: rgba(255,255,255,0.07);
-    --line-2: rgba(255,255,255,0.12);
-    --teal: #00E5CC;
-    --teal-2: #00F0D0;
-    --teal-soft: rgba(0,229,204,0.14);
-    --glass: rgba(255,255,255,0.04);
-    --glass-strong: rgba(255,255,255,0.06);
-    --radius: 14px;
-    --maxw: 1320px;
-  }
-
-  *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:'DM Sans',system-ui,sans-serif;
-    font-size:16px;
-    line-height:1.55;
-    overflow-x:hidden;
-    -webkit-font-smoothing:antialiased;
-  }
-
-  /* custom scrollbar */
-  html{scrollbar-color: var(--teal) #07100f;scrollbar-width:thin}
-  ::-webkit-scrollbar{width:10px;height:10px}
-  ::-webkit-scrollbar-track{background:#040608;border-left:1px solid var(--line)}
-  ::-webkit-scrollbar-thumb{
-    background:linear-gradient(180deg, var(--teal-2), #00a896);
-    border-radius:10px;
-    border:2px solid #040608;
-    box-shadow:inset 0 0 6px rgba(0,229,204,0.4);
-  }
-  ::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg, #2bffe0, var(--teal))}
-  ::-webkit-scrollbar-corner{background:#040608}
-  a{color:inherit;text-decoration:none}
-  button{font-family:inherit;cursor:pointer;border:0;background:none;color:inherit}
-  img,svg{display:block;max-width:100%}
-
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
-
-  /* ---------- custom cursor ---------- */
-  .cursor-glow{
-    position:fixed;top:0;left:0;width:520px;height:520px;
-    pointer-events:none;z-index:1;transform:translate(-50%,-50%);
-    background:radial-gradient(circle at center, rgba(0,229,204,0.12), rgba(0,229,204,0) 60%);
-    transition:opacity .4s ease;opacity:0;mix-blend-mode:screen;
-  }
-  body.cursor-on .cursor-glow{opacity:1}
-  .cursor-dot, .cursor-ring{
-    position:fixed;top:0;left:0;pointer-events:none;z-index:9999;
-    transform:translate(-50%,-50%);will-change:transform,width,height,opacity;
-    mix-blend-mode:difference;
-  }
-  .cursor-dot{
-    width:8px;height:8px;border-radius:50%;background:var(--teal);
-    box-shadow:0 0 12px var(--teal-2);mix-blend-mode:normal;
-  }
-  .cursor-ring{
-    width:38px;height:38px;border-radius:50%;
-    border:1.5px solid var(--teal);
-    transition:width .25s ease, height .25s ease, border-color .25s ease, background .25s ease, opacity .25s ease;
-    mix-blend-mode:normal;
-  }
-  .cursor-ring::after{
-    content:"";position:absolute;inset:-1px;border-radius:50%;
-    border:1px dashed rgba(0,229,204,0.35);
-    animation:cspin 6s linear infinite;
-  }
-  @keyframes cspin{to{transform:rotate(360deg)}}
-  body.cursor-on{cursor:none}
-  body.cursor-on a, body.cursor-on button, body.cursor-on input, body.cursor-on textarea, body.cursor-on label{cursor:none}
-  body.cursor-hover .cursor-ring{width:60px;height:60px;background:rgba(0,229,204,0.10)}
-  body.cursor-press .cursor-ring{width:28px;height:28px;background:rgba(0,229,204,0.20)}
-  body.cursor-text .cursor-ring{width:6px;height:32px;border-radius:2px;border-color:var(--teal-2)}
-  body.cursor-text .cursor-ring::after{display:none}
-  body.cursor-text .cursor-dot{opacity:0}
-  @media (hover:none),(pointer:coarse){.cursor-dot,.cursor-ring{display:none}}
-
-  /* ---------- navbar ---------- */
-  .nav{
-    position:fixed;top:0;left:0;right:0;z-index:50;
-    transition:background .3s ease, backdrop-filter .3s ease, border-color .3s ease;
-    border-bottom:1px solid transparent;
-  }
-  .nav.scrolled{
-    background:rgba(4,6,8,0.72);
-    backdrop-filter:blur(14px) saturate(140%);
-    -webkit-backdrop-filter:blur(14px) saturate(140%);
-    border-bottom-color:var(--line);
-  }
-  .nav-inner{
-    max-width:var(--maxw);margin:0 auto;
-    padding:18px 32px;
-    display:flex;align-items:center;gap:32px;
-  }
-  .logo{display:flex;align-items:baseline;gap:8px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
-  .logo .mark{color:var(--teal);font-weight:700;font-size:24px;letter-spacing:.06em}
-  .logo .sub{color:var(--ink-dim);font-weight:500;font-size:12px;letter-spacing:.32em;text-transform:uppercase}
-  .nav-links{display:flex;align-items:center;gap:6px;margin-left:auto;margin-right:auto}
-  .nav-links a{
-    display:inline-flex;align-items:center;gap:10px;
-    padding:8px 14px;font-size:14px;color:var(--ink-dim);
-    transition:color .2s ease;
-  }
-  .nav-links a::before{content:"";width:18px;height:1px;background:var(--ink-mute)}
-  .nav-links a.active{color:var(--teal)}
-  .nav-links a.active::before{background:var(--teal)}
-  .nav-links a:hover{color:var(--ink)}
-  .nav-cta{display:flex;align-items:center;gap:14px}
-  .nav-burger{
-    display:none;width:42px;height:42px;border:1px solid var(--line);
-    background:rgba(255,255,255,0.02);border-radius:8px;cursor:pointer;
-    padding:0;position:relative;transition:border-color .2s ease, background .2s ease;
-  }
-  .nav-burger:hover{border-color:var(--teal);background:rgba(0,229,204,0.06)}
-  .nav-burger span{
-    position:absolute;left:11px;width:20px;height:1.5px;background:var(--ink);
-    transition:transform .3s ease, opacity .2s ease, top .3s ease;
-  }
-  .nav-burger span:nth-child(1){top:14px}
-  .nav-burger span:nth-child(2){top:20px}
-  .nav-burger span:nth-child(3){top:26px}
-  .nav-burger.open span:nth-child(1){top:20px;transform:rotate(45deg);background:var(--teal)}
-  .nav-burger.open span:nth-child(2){opacity:0}
-  .nav-burger.open span:nth-child(3){top:20px;transform:rotate(-45deg);background:var(--teal)}
-  .nav-mobile{
-    display:none;flex-direction:column;
-    padding:8px 32px 24px;border-top:1px solid var(--line);
-    background:rgba(4,6,8,0.96);backdrop-filter:saturate(140%) blur(14px);
-    max-height:0;overflow:hidden;transition:max-height .35s ease, padding .35s ease;
-  }
-  .nav-mobile.open{max-height:520px;padding:14px 32px 24px}
-  .nm-link{
-    display:flex;align-items:center;gap:18px;
-    padding:18px 4px;border-bottom:1px solid var(--line);
-    color:var(--ink-dim);font-family:'Barlow Condensed',sans-serif;
-    font-size:26px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
-    transition:color .2s ease,padding-left .25s ease;
-  }
-  .nm-link:last-child{border-bottom:0}
-  .nm-link:hover,.nm-link.active{color:var(--teal);padding-left:10px}
-  .nm-num{
-    font-size:12px;letter-spacing:.32em;color:var(--ink-mute);
-    font-weight:700;min-width:28px;
-  }
-  .nm-link.active .nm-num,.nm-link:hover .nm-num{color:var(--teal)}
-  .pill{
-    background:var(--teal);color:#001815;font-weight:600;font-size:14px;
-    padding:10px 20px;border-radius:999px;letter-spacing:.01em;
-    transition:transform .2s ease, box-shadow .2s ease;
-    box-shadow:0 0 0 0 rgba(0,229,204,0);
-  }
-  .pill:hover{transform:translateY(-1px);box-shadow:0 8px 24px -8px rgba(0,229,204,0.55)}
-  .icon-btn{
-    width:38px;height:38px;border-radius:50%;
-    border:1px solid var(--line-2);display:grid;place-items:center;
-    color:var(--ink-dim);transition:color .2s ease, border-color .2s ease;
-  }
-  .icon-btn:hover{color:var(--teal);border-color:var(--teal)}
-
-  /* ---------- hero ---------- */
-  .hero{
-    position:relative;min-height:100vh;padding:140px 0 80px;
-    display:flex;align-items:center;
-    overflow:hidden;
-  }
-  .hero-grid{
-    position:absolute;inset:0;z-index:0;
-    background-image:
-      linear-gradient(rgba(0,229,204,0.07) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,204,0.07) 1px, transparent 1px);
-    background-size:80px 80px;
-    mask-image: radial-gradient(ellipse at 50% 40%, black 0%, black 40%, transparent 80%);
-    -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 0%, black 40%, transparent 80%);
-    animation: gridMove 24s linear infinite;
-  }
-  @keyframes gridMove{
-    from{background-position:0 0, 0 0}
-    to{background-position:80px 80px, 80px 80px}
-  }
-  .hero-vignette{
-    position:absolute;inset:0;z-index:0;pointer-events:none;
-    background:
-      radial-gradient(60% 50% at 75% 45%, rgba(0,229,204,0.08), transparent 70%),
-      radial-gradient(70% 80% at 0% 100%, rgba(0,229,204,0.05), transparent 60%),
-      linear-gradient(180deg, rgba(4,6,8,0) 60%, var(--bg) 100%);
-  }
-
-  .hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;width:100%}
-
-  .badge{
-    display:inline-flex;align-items:center;gap:10px;
-    background:var(--teal-soft);
-    border:1px solid rgba(0,229,204,0.35);
-    color:var(--teal);
-    padding:8px 16px;border-radius:999px;
-    font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
-  }
-  .badge .dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 12px var(--teal)}
-
-  .display{
-    font-family:'Barlow Condensed',sans-serif;
-    font-weight:700;
-    text-transform:uppercase;
-    line-height:.92;
-    letter-spacing:-.005em;
-    margin:24px 0 0;
-    font-size:clamp(64px, 11vw, 168px);
-  }
-  .display .ln{display:block;overflow:hidden}
-  .display .ln span{display:inline-block;transform:translateY(110%);opacity:0;will-change:transform,opacity}
-  .display .ln.italic span{font-style:italic;color:#b9c4c1;font-weight:500}
-  .display .diamond{
-    display:inline-block;width:18px;height:18px;background:var(--teal);
-    transform:translateY(110%) rotate(45deg);opacity:0;
-    margin:0 18px 14px 6px;vertical-align:middle;
-    box-shadow:0 0 24px var(--teal);
-  }
-  .reveal-on .display .ln span,
-  .reveal-on .display .diamond{
-    animation: lineUp .9s cubic-bezier(.2,.8,.2,1) forwards;
-  }
-  .reveal-on .display .ln:nth-child(1) span{animation-delay:.05s}
-  .reveal-on .display .ln:nth-child(2) span{animation-delay:.22s}
-  .reveal-on .display .ln:nth-child(3) span{animation-delay:.38s}
-  .reveal-on .display .diamond{animation-delay:.55s}
-  @keyframes lineUp{
-    to{transform:translateY(0) rotate(var(--rot, 0));opacity:1}
-  }
-  .display .diamond{--rot:45deg}
-
-  .lede{
-    margin:32px 0 36px;color:var(--ink-dim);max-width:520px;font-size:17px;line-height:1.6;
-  }
-
-  .ctas{display:flex;gap:14px;flex-wrap:wrap}
-  .btn{
-    display:inline-flex;align-items:center;gap:12px;
-    padding:16px 28px;border-radius:999px;font-weight:600;font-size:15px;
-    transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
-    letter-spacing:.01em;
-  }
-  .btn-primary{background:var(--teal);color:#001815;box-shadow:0 0 0 0 rgba(0,229,204,0)}
-  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 38px -10px rgba(0,229,204,0.55)}
-  .btn-ghost{background:rgba(255,255,255,0.04);border:1px solid var(--line-2);color:var(--ink)}
-  .btn-ghost:hover{border-color:var(--teal);color:var(--teal)}
-  .btn-ghost .play{
-    width:22px;height:22px;border-radius:50%;background:var(--ink);color:#001815;
-    display:grid;place-items:center;font-size:9px;
-    transition:background .2s ease;
-  }
-  .btn-ghost:hover .play{background:var(--teal)}
-
-  /* hero visual */
-  .hero-visual{position:relative;height:600px}
-  .hv-frame{
-    position:absolute;inset:0;border:1px solid var(--line);border-radius:18px;
-    background:
-      radial-gradient(60% 80% at 50% 40%, rgba(0,229,204,0.18), transparent 70%),
-      linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.5));
-    overflow:hidden;
-  }
-  .hv-frame::before{
-    content:"";position:absolute;inset:0;
-    background-image:
-      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
-    background-size:40px 40px;
-  }
-  .hv-orb{
-    position:absolute;inset:0;display:grid;place-items:center;
-  }
-  .hv-orb svg{width:88%;height:88%}
-  .hv-ring{
-    fill:none;stroke:rgba(0,229,204,0.4);stroke-width:1;
-    transform-origin:center;
-  }
-  .hv-ring.r1{animation:spin 24s linear infinite}
-  .hv-ring.r2{animation:spin 36s linear infinite reverse;stroke:rgba(255,255,255,0.18)}
-  .hv-ring.r3{animation:spin 48s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .hv-core{
-    fill:url(#coreGrad);filter:drop-shadow(0 0 30px rgba(0,229,204,0.7));
-  }
-  .hv-node{fill:var(--teal)}
-  .hv-line{stroke:rgba(0,229,204,0.45);stroke-width:1;fill:none;stroke-dasharray:2 4}
-  .hv-line.pulse{stroke:var(--teal);stroke-width:1.4;stroke-dasharray:6 10;animation:dash 4s linear infinite}
-  @keyframes dash{to{stroke-dashoffset:-100}}
-
-  .stat-card{
-    position:absolute;
-    background:rgba(20,28,28,0.55);
-    backdrop-filter:blur(14px) saturate(140%);
-    -webkit-backdrop-filter:blur(14px) saturate(140%);
-    border:1px solid rgba(255,255,255,0.10);
-    border-radius:16px;padding:18px 24px;
-    min-width:140px;text-align:center;
-    box-shadow:0 30px 60px -30px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
-    animation:bob 6s ease-in-out infinite;
-  }
-  .stat-card .num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:36px;letter-spacing:.02em;line-height:1}
-  .stat-card .lbl{margin-top:6px;font-size:12px;color:var(--ink-dim);letter-spacing:.16em;text-transform:uppercase}
-  .stat-card.s1{top:18%;left:-6%;animation-delay:0s}
-  .stat-card.s2{top:34%;right:-4%;animation-delay:1.5s}
-  .stat-card.s3{bottom:10%;right:18%;animation-delay:3s}
-  @keyframes bob{
-    0%,100%{transform:translateY(0)}
-    50%{transform:translateY(-10px)}
-  }
-
-  .hv-mark{position:absolute;width:14px;height:14px;border:1px solid rgba(0,229,204,0.7);transform:rotate(45deg)}
-  .hv-mark.m1{top:8%;left:32%}
-  .hv-mark.m2{top:48%;left:6%}
-  .hv-mark.m3{bottom:12%;left:46%}
-
-  /* ---------- section base ---------- */
-  section{position:relative}
-  .sec{padding:140px 0;position:relative;z-index:2}
-  .eyebrow{
-    display:inline-flex;align-items:center;gap:10px;
-    color:var(--teal);font-size:12px;letter-spacing:.28em;text-transform:uppercase;font-weight:600;
-  }
-  .eyebrow::before{content:"";width:24px;height:1px;background:var(--teal)}
-  .sec-h{
-    font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;
-    font-size:clamp(44px, 6vw, 88px);line-height:.95;letter-spacing:-.005em;margin:18px 0 18px;
-  }
-  .sec-h em{font-style:italic;font-weight:500;color:#b9c4c1}
-  .sec-sub{color:var(--ink-dim);max-width:640px;font-size:17px}
-
-  .reveal{opacity:0;transform:translateY(40px);transition:opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1)}
-  .reveal.in{opacity:1;transform:translateY(0)}
-
-  /* ---------- services ---------- */
-  .services{}
-  .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:60px}
-  .svc{
-    position:relative;padding:34px 30px 32px;
-    border:1px solid var(--line-2);border-radius:18px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005));
-    transition:transform .35s ease, border-color .35s ease, box-shadow .35s ease, background .35s ease;
-    overflow:hidden;
-  }
-  .svc::before{
-    content:"";position:absolute;inset:0;border-radius:18px;pointer-events:none;
-    background:radial-gradient(80% 60% at 50% 0%, rgba(0,229,204,0.10), transparent 70%);
-    opacity:0;transition:opacity .35s ease;
-  }
-  .svc:hover{transform:translateY(-6px);border-color:rgba(0,229,204,0.5);box-shadow:0 30px 60px -30px rgba(0,229,204,0.25)}
-  .svc:hover::before{opacity:1}
-  .svc-icon{
-    width:56px;height:56px;border-radius:14px;
-    border:1px solid rgba(0,229,204,0.35);
-    background:rgba(0,229,204,0.07);
-    display:grid;place-items:center;color:var(--teal);
-    margin-bottom:24px;
-  }
-  .svc-num{position:absolute;top:24px;right:26px;color:var(--ink-mute);font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:.2em}
-  .svc h3{
-    font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;
-    font-size:24px;letter-spacing:.01em;margin:0 0 12px;
-  }
-  .svc p{color:var(--ink-dim);font-size:15px;margin:0}
-
-  /* ---------- cases ---------- */
-  .case{
-    display:grid;grid-template-columns:200px 1fr 280px;gap:48px;
-    padding:48px 0;border-top:1px solid var(--line);
-    align-items:start;
-  }
-  .case:last-of-type{border-bottom:1px solid var(--line)}
-  .case-tag{color:var(--teal);font-size:12px;letter-spacing:.24em;text-transform:uppercase;font-weight:600;padding-top:8px}
-  .case-body h3{
-    font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;
-    font-size:42px;line-height:1;letter-spacing:-.005em;margin:0 0 16px;
-  }
-  .case-body p{color:var(--ink-dim);margin:0 0 20px;max-width:580px}
-  .case-out{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
-  .case-out li{position:relative;padding-left:22px;color:var(--ink);font-size:14px}
-  .case-out li::before{
-    content:"";position:absolute;left:0;top:7px;width:8px;height:8px;background:var(--teal);transform:rotate(45deg);
-    box-shadow:0 0 10px rgba(0,229,204,0.7);
-  }
-  .case-accent{
-    position:relative;height:120px;
-    border-left:1px solid var(--line-2);
-    padding-left:24px;
-    color:var(--ink-mute);font-family:'Barlow Condensed',sans-serif;
-    font-size:14px;letter-spacing:.24em;text-transform:uppercase;
-  }
-  .case-accent .num{
-    font-size:64px;color:var(--ink);font-weight:700;line-height:1;display:block;margin-bottom:8px;
-    background:linear-gradient(180deg, var(--ink), rgba(232,241,239,0.2));
-    -webkit-background-clip:text;background-clip:text;color:transparent;
-  }
-
-  /* ---------- metrics ---------- */
-  .metrics{
-    background:linear-gradient(180deg, var(--bg), var(--bg-2));
-    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-  }
-  .metrics-row{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin:60px 0 90px}
-  .metric{padding:30px 24px;border-left:1px solid var(--line)}
-  .metric:first-child{border-left:0}
-  .metric .big{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:84px;line-height:1;color:var(--ink)}
-  .metric .big .plus{color:var(--teal)}
-  .metric .lbl{color:var(--ink-dim);font-size:13px;letter-spacing:.22em;text-transform:uppercase;margin-top:10px}
-
-  /* process flow — horizontal on desktop, vertical on mobile */
-  .flow{position:relative;margin-top:30px}
-  .flow-svg{display:block;width:100%;height:auto}
-  .flow-mobile{display:none}
-  @media (max-width: 900px){
-    .flow-svg{display:none}
-    .flow-mobile{
-      display:flex;flex-direction:column;gap:0;list-style:none;
-      margin:30px auto 0;padding:8px 0;position:relative;
-      max-width:720px;
-    }
-    .flow-mobile::before{
-      content:"";position:absolute;left:30px;top:30px;bottom:30px;width:2px;
-      background:linear-gradient(180deg, rgba(0,229,204,0.15), var(--teal) 50%, rgba(0,229,204,0.15));
-      box-shadow:0 0 12px rgba(0,229,204,0.4);
-    }
-    .flow-step{
-      position:relative;padding:22px 0 22px 90px;
-      display:flex;flex-direction:column;gap:6px;
-    }
-    .flow-step::before{
-      content:"";position:absolute;left:18px;top:30px;
-      width:26px;height:26px;border-radius:50%;
-      background:rgba(0,229,204,0.10);border:1.5px solid var(--teal);
-      box-shadow:0 0 18px rgba(0,229,204,0.45);
-      box-sizing:border-box;
-    }
-    .flow-step::after{
-      content:"";position:absolute;left:28px;top:40px;
-      width:6px;height:6px;border-radius:50%;background:var(--teal);
-      box-shadow:0 0 10px var(--teal-2);
-    }
-    .flow-step.active::before{
-      width:34px;height:34px;left:14px;top:26px;
-      background:rgba(0,229,204,0.22);border-width:2px;
-    }
-    .flow-step.active::after{left:27px;top:39px;width:8px;height:8px}
-    .flow-step .fs-num{
-      font-family:'Barlow Condensed',sans-serif;
-      font-size:13px;letter-spacing:.32em;color:var(--ink-mute);font-weight:700;
-    }
-    .flow-step .fs-title{
-      font-family:'Barlow Condensed',sans-serif;
-      font-weight:700;text-transform:uppercase;
-      font-size:40px;line-height:1;letter-spacing:.01em;color:var(--ink);
-    }
-    .flow-step.active .fs-title{color:var(--teal)}
-  }
-
-  /* ---------- about ---------- */
-  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
-  .about-text p{color:var(--ink-dim);font-size:18px;line-height:1.7;max-width:520px}
-  .regions{display:flex;flex-direction:column;gap:20px}
-  .region-map{position:relative;border:1px solid var(--line-2);border-radius:18px;padding:30px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2))}
-  .region-map svg{width:100%;height:auto;opacity:.55}
-  .region-map .pin{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 6px rgba(0,229,204,0.18), 0 0 30px rgba(0,229,204,0.7);animation:pulse 2.4s ease-in-out infinite}
-  .region-map .pin.americas{top:48%;left:25%;animation-delay:.0s}
-  .region-map .pin.europe{top:38%;left:52%;animation-delay:.6s}
-  .region-map .pin.asia{top:46%;left:74%;animation-delay:1.2s}
-  @keyframes pulse{
-    0%,100%{box-shadow:0 0 0 6px rgba(0,229,204,0.18), 0 0 30px rgba(0,229,204,0.7)}
-    50%{box-shadow:0 0 0 14px rgba(0,229,204,0.0), 0 0 40px rgba(0,229,204,0.5)}
-  }
-  .region-badges{display:flex;gap:10px;justify-content:center;margin-top:24px;flex-wrap:wrap}
-  .rb{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:10px 16px;border-radius:999px;
-    border:1px solid rgba(0,229,204,0.3);background:rgba(0,229,204,0.05);
-    font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink);font-weight:600;
-  }
-  .rb .d{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 10px var(--teal)}
-
-  /* ---------- contact ---------- */
-  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;margin-top:60px;align-items:start}
-  .contact-info{display:flex;flex-direction:column;gap:24px}
-  .ci-row{display:flex;gap:18px;align-items:flex-start;padding:20px 0;border-top:1px solid var(--line)}
-  .ci-row:first-of-type{border-top:0}
-  .ci-row .ic{width:42px;height:42px;border-radius:12px;border:1px solid rgba(0,229,204,0.3);background:rgba(0,229,204,0.06);display:grid;place-items:center;color:var(--teal);flex:none}
-  .ci-row .lbl{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-mute);font-weight:600}
-  .ci-row .val{display:inline-block;margin-top:6px;font-size:18px;color:var(--ink);font-family:'Barlow Condensed',sans-serif;font-weight:500;letter-spacing:.01em;transition:color .2s ease}
-  a.ci-row .val,a.val{cursor:pointer}
-  a.val:hover{color:var(--teal)}
-  .ci-row .val.addr{font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.6;color:var(--ink-dim);font-weight:400}
-
-  .form{
-    border:1px solid var(--line-2);border-radius:18px;padding:32px;
-    background:linear-gradient(180deg, rgba(255,255,255,0.025), rgba(255,255,255,0.005));
-  }
-  .field{margin-bottom:18px}
-  .field label{display:block;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--ink-mute);margin-bottom:8px;font-weight:600}
-  .field input,.field textarea{
-    width:100%;background:rgba(0,0,0,0.3);border:1px solid var(--line-2);border-radius:12px;
-    color:var(--ink);font-family:inherit;font-size:15px;padding:14px 16px;
-    transition:border-color .2s ease, box-shadow .2s ease;
-  }
-  .field input:focus,.field textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,229,204,0.15)}
-  .field textarea{min-height:120px;resize:vertical}
-  .submit{
-    width:100%;background:var(--teal);color:#001815;font-weight:700;
-    padding:16px;border-radius:12px;font-size:14px;letter-spacing:.16em;text-transform:uppercase;
-    transition:transform .2s ease, box-shadow .2s ease, opacity .2s ease;
-    box-shadow:0 0 0 0 rgba(0,229,204,0);
-    position:relative;display:flex;align-items:center;justify-content:center;min-height:50px;
-  }
-  .submit:hover{transform:translateY(-2px);box-shadow:0 14px 38px -10px rgba(0,229,204,0.65)}
-  .submit[disabled]{cursor:wait;opacity:.85}
-  .submit-label{transition:opacity .2s ease}
-  .submit-loader{position:absolute;inset:0;display:none;align-items:center;justify-content:center;gap:6px}
-  .submit-loader span{width:8px;height:8px;border-radius:50%;background:#001815;animation:loadDot 1s ease-in-out infinite}
-  .submit-loader span:nth-child(2){animation-delay:.15s}
-  .submit-loader span:nth-child(3){animation-delay:.3s}
-  @keyframes loadDot{0%,80%,100%{transform:scale(.4);opacity:.4}40%{transform:scale(1);opacity:1}}
-  .submit.loading .submit-label{opacity:0}
-  .submit.loading .submit-loader{display:flex}
-  .form-msg{margin-top:14px;color:#ff9f8a;font-size:13px;display:none}
-  .form-msg.show{display:block;animation:shake .4s ease}
-  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-
-  .form-stack{position:relative;min-height:430px}
-  .form-fields{transition:opacity .35s ease, transform .35s ease, filter .35s ease}
-  .form-fields.hidden{opacity:0;transform:translateY(-10px);pointer-events:none;filter:blur(4px);position:absolute;inset:0;width:100%}
-  .form-success{
-    position:absolute;inset:0;
-    opacity:0;transform:translateY(20px) scale(.96);pointer-events:none;
-    text-align:center;padding:30px 10px 10px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;
-    transition:opacity .5s ease .15s, transform .55s cubic-bezier(.2,.8,.2,1) .15s;
-  }
-  .form-success.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
-  .form-success h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:34px;margin:18px 0 10px;letter-spacing:.01em}
-  .form-success p{color:var(--ink-dim);font-size:15px;margin:0 0 24px;line-height:1.6}
-  .success-again{
-    display:inline-flex;align-items:center;gap:8px;
-    padding:12px 22px;border-radius:999px;border:1px solid rgba(0,229,204,0.4);
-    background:rgba(0,229,204,0.06);color:var(--teal);
-    font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase;
-    transition:background .2s ease, border-color .2s ease;
-  }
-  .success-again:hover{background:rgba(0,229,204,0.14);border-color:var(--teal)}
-
-  .success-check{width:96px;height:96px;display:block;margin:0 auto;filter:drop-shadow(0 0 18px rgba(0,229,204,0.5))}
-  .success-check .sc-bg{fill:rgba(0,229,204,0.08);stroke:none}
-  .success-check .sc-ring{fill:none;stroke:var(--teal);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:226;stroke-dashoffset:226;transform:rotate(-90deg);transform-origin:center}
-  .success-check .sc-tick{fill:none;stroke:var(--teal-2);stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60}
-  .form-success.show .sc-ring{animation:scRing .7s cubic-bezier(.5,0,.2,1) forwards}
-  .form-success.show .sc-tick{animation:scTick .35s cubic-bezier(.5,0,.2,1) .55s forwards}
-  @keyframes scRing{to{stroke-dashoffset:0}}
-  @keyframes scTick{to{stroke-dashoffset:0}}
-
-  /* cookie prefs */
-  .pref-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:18px 0;border-top:1px solid var(--line)}
-  .pref-row:first-of-type{border-top:0}
-  .pref-row .pref-text h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:18px;margin:0 0 6px;letter-spacing:.04em;color:var(--ink)}
-  .pref-row .pref-text p{font-size:13px;color:var(--ink-dim);line-height:1.55;margin:0;max-width:520px}
-  .pref-row .pref-text .req{display:inline-block;margin-left:8px;font-size:10px;letter-spacing:.18em;color:var(--teal);border:1px solid rgba(0,229,204,0.4);padding:2px 8px;border-radius:999px;vertical-align:middle}
-  .toggle{position:relative;display:inline-block;width:46px;height:26px;flex:none;margin-top:4px}
-  .toggle input{opacity:0;width:0;height:0}
-  .toggle .slider{position:absolute;inset:0;background:rgba(255,255,255,0.08);border:1px solid var(--line-2);border-radius:999px;cursor:pointer;transition:.3s}
-  .toggle .slider::before{content:"";position:absolute;left:3px;top:3px;width:18px;height:18px;background:var(--ink-mute);border-radius:50%;transition:.3s}
-  .toggle input:checked + .slider{background:rgba(0,229,204,0.18);border-color:var(--teal)}
-  .toggle input:checked + .slider::before{transform:translateX(20px);background:var(--teal);box-shadow:0 0 10px var(--teal)}
-  .toggle input:disabled + .slider{opacity:.6;cursor:not-allowed}
-  .pref-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;padding-top:20px;border-top:1px solid var(--line)}
-  .pref-actions button{padding:12px 22px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.08em;cursor:pointer}
-  .pref-actions .save{background:var(--teal);color:#001815}
-  .pref-actions .reject{border:1px solid var(--line-2);color:var(--ink-dim);background:transparent;transition:color .2s ease,border-color .2s ease}
-  .pref-actions .reject:hover{color:var(--teal);border-color:var(--teal)}
-  .pref-saved{display:none;margin-top:14px;color:var(--teal);font-size:13px;letter-spacing:.04em}
-  .pref-saved.show{display:block;animation:fadeIn .4s ease}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-
-  /* ---------- footer ---------- */
-  footer{background:#020405;border-top:1px solid var(--line);padding:60px 0 24px}
-  .foot-top{display:grid;grid-template-columns:2fr 2fr 1fr;gap:48px;align-items:start}
-  .foot-top .logo .mark{font-size:28px}
-  .foot-addr{color:var(--ink-dim);font-size:13px;line-height:1.6;margin-top:14px;max-width:340px}
-  .foot-links{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
-  .foot-links button{font-size:13px;color:var(--ink-dim);padding:6px 14px;border-radius:999px;border:1px solid var(--line);transition:color .2s ease, border-color .2s ease}
-  .foot-links button:hover{color:var(--teal);border-color:var(--teal)}
-  .foot-phone{text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:.02em}
-  .foot-bar{
-    margin-top:48px;padding-top:24px;border-top:1px solid var(--line);
-    display:flex;justify-content:space-between;align-items:center;color:var(--ink-mute);font-size:12px;letter-spacing:.04em;
-  }
-
-  /* ---------- modal ---------- */
-  .modal-back{
-    position:fixed;inset:0;background:rgba(2,4,5,0.78);backdrop-filter:blur(8px);
-    z-index:100;display:none;align-items:center;justify-content:center;padding:32px;
-  }
-  .modal-back.show{display:flex}
-  .modal{
-    max-width:760px;width:100%;max-height:80vh;overflow:auto;
-    background:#0a1213;border:1px solid var(--line-2);border-radius:20px;padding:48px;
-    position:relative;
-  }
-  .modal h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:42px;margin:0 0 20px}
-  .modal h3{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:18px;margin:24px 0 8px;color:var(--teal);letter-spacing:.06em}
-  .modal p{color:var(--ink-dim);font-size:14px;line-height:1.65;margin:0 0 12px}
-  .modal-x{
-    position:absolute;top:20px;right:20px;width:38px;height:38px;border-radius:50%;
-    border:1px solid var(--line-2);display:grid;place-items:center;color:var(--ink-dim);
-    transition:color .2s ease, border-color .2s ease;
-  }
-  .modal-x:hover{color:var(--teal);border-color:var(--teal)}
-
-  /* ---------- cookie banner ---------- */
-  .cookie{
-    position:fixed;bottom:24px;left:24px;right:24px;max-width:520px;z-index:80;
-    background:rgba(10,18,19,0.92);backdrop-filter:blur(14px);
-    border:1px solid var(--line-2);border-radius:18px;padding:22px 24px;
-    display:none;box-shadow:0 30px 80px -20px rgba(0,0,0,0.7);
-  }
-  .cookie.show{display:block}
-  .cookie h4{font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:18px;margin:0 0 8px;letter-spacing:.04em}
-  .cookie p{color:var(--ink-dim);font-size:13px;line-height:1.55;margin:0 0 16px}
-  .cookie-actions{display:flex;gap:10px;flex-wrap:wrap}
-  .cookie-actions button{padding:10px 18px;border-radius:999px;font-size:13px;font-weight:600;letter-spacing:.04em}
-  .cookie-actions .accept{background:var(--teal);color:#001815}
-  .cookie-actions .manage{border:1px solid var(--line-2);color:var(--ink-dim)}
-  .cookie-actions .manage:hover{color:var(--teal);border-color:var(--teal)}
-
-  /* ---------- responsive ---------- */
-  @media (max-width: 1100px){
-    .hero-inner{grid-template-columns:1fr;gap:60px}
-    .hero-visual{height:480px}
-    .svc-grid{grid-template-columns:repeat(2,1fr)}
-    .case{grid-template-columns:1fr;gap:18px}
-    .case-accent{border-left:0;padding-left:0;height:auto}
-    .about-grid,.contact-grid{grid-template-columns:1fr;gap:48px}
-    .metrics-row{grid-template-columns:repeat(2,1fr);gap:0}
-    .metric{border-left:0;border-top:1px solid var(--line);padding:28px 0}
-    .metric:first-child{border-top:0}
-    .nav-links{display:none}
-    .nav-burger{display:inline-flex;align-items:center;justify-content:center}
-    .nav-mobile{display:flex}
-  }
-  @media (max-width: 640px){
-    .wrap{padding:0 20px}
-    .nav-inner{padding:14px 20px}
-    .nav-mobile{padding-left:20px;padding-right:20px}
-    .nav-mobile.open{padding-left:20px;padding-right:20px}
-    .sec{padding:90px 0}
-    .display{font-size:clamp(56px, 18vw, 96px)}
-    .svc-grid{grid-template-columns:1fr}
-    .metrics-row{grid-template-columns:1fr}
-    .foot-top{grid-template-columns:1fr;gap:24px}
-    .foot-phone{text-align:left}
-    .foot-bar{flex-direction:column;gap:8px;text-align:center}
-    .modal{padding:32px 22px}
-    .stat-card{padding:14px 18px;min-width:118px}
-    .stat-card .num{font-size:28px}
-    .stat-card.s1{left:0}
-    .stat-card.s2{right:0}
-  }
-
-  @media (prefers-reduced-motion: reduce){
-    *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
-    .reveal{opacity:1;transform:none}
-    .display .ln span,.display .diamond{transform:none;opacity:1}
-  }
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ARTEFACT — Музей моментов в искусстве</title>
+<meta name="description" content="ARTEFACT — просветительский проект об истории искусств. Видео, факты, эпохи от романики до модерна." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Inter+Tight:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="cursor-glow" id="cursorGlow"></div>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="cursor-dot" id="cursorDot"></div>
 
-<!-- NAV -->
-<nav class="nav" id="nav">
-  <div class="nav-inner">
-    <a href="#home" class="logo"><span class="mark">ELYPTIX</span><span class="sub">Limited</span></a>
-    <div class="nav-links">
-      <a href="#home" class="active">Home</a>
-      <a href="#services">Services</a>
-      <a href="#cases">Cases</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </div>
-    <div class="nav-cta">
-      <a href="#contact" class="pill">Let's Talk</a>
-      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
+<div class="grain"></div>
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+
+<svg style="display:none">
+  <symbol id="star4" viewBox="0 0 24 24"><path d="M12 0 L13.5 10.5 L24 12 L13.5 13.5 L12 24 L10.5 13.5 L0 12 L10.5 10.5 Z"/></symbol>
+  <symbol id="arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 17 L17 7 M9 7 H17 V15"/></symbol>
+  <symbol id="arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M5 12 H19 M13 6 L19 12 L13 18"/></symbol>
+  <symbol id="play" viewBox="0 0 24 24"><path d="M6 4 L20 12 L6 20 Z" fill="currentColor"/></symbol>
+</svg>
+
+<nav id="nav">
+  <a href="index.html" class="logo">
+    <img src="logo.svg" alt="ARTEFACT" class="logo-img">
+  </a>
+  <div class="nav-center">
+    <a href="index.html" class="active">Главная</a>
+    <a href="gallery.html">Галерея</a>
+    <a href="eras.html">Эпохи</a>
+    <a href="tournaments.html">Турниры</a>
+    <a href="journal.html">Журнал</a>
+    <a href="about.html">О проекте</a>
   </div>
-  <div class="nav-mobile" id="navMobile">
-    <a href="#home" class="nm-link active"><span class="nm-num">01</span><span>Home</span></a>
-    <a href="#services" class="nm-link"><span class="nm-num">02</span><span>Services</span></a>
-    <a href="#cases" class="nm-link"><span class="nm-num">03</span><span>Cases</span></a>
-    <a href="#about" class="nm-link"><span class="nm-num">04</span><span>About</span></a>
-    <a href="#contact" class="nm-link"><span class="nm-num">05</span><span>Contact</span></a>
+  <div class="nav-right">
+    <span class="live-dot"></span>
+    <span class="hide-mobile">В эфире</span>
+    <button class="menu-btn" id="menuBtn">
+      Меню <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="8" x2="21" y2="8"/><line x1="3" y1="16" x2="21" y2="16"/></svg>
+    </button>
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero" id="home">
-  <div class="hero-grid"></div>
-  <div class="hero-vignette"></div>
-  <div class="wrap hero-inner reveal-on">
+<div class="menu-overlay" id="menuOverlay">
+  <button class="menu-close" id="menuClose">×</button>
+  <div class="menu-inner">
+    <div class="menu-eyebrow">Навигация · ARTEFACT</div>
+    <ul class="menu-links">
+      <li><a href="index.html"><em>I</em> Главная</a></li>
+      <li><a href="gallery.html"><em>II</em> Галерея</a></li>
+      <li><a href="eras.html"><em>III</em> Эпохи</a></li>
+      <li><a href="journal.html"><em>IV</em> Журнал</a></li>
+      <li><a href="about.html"><em>V</em> О проекте</a></li>
+    </ul>
+    <div class="menu-foot">
+      <span>artefact.art@mail.ru</span>
+      <span>VK · Telegram · YouTube</span>
+    </div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="hero-meta">
+    <div class="hero-meta-line">с 2021 / просветительский проект</div>
+    <div>Vol. IV / MMXXVI</div>
+  </div>
+
+  <div class="hero-left">
+    <div class="hero-eyebrow">Музей моментов в искусстве</div>
+    <h1 class="hero-title">
+      <span class="word"><span>Жить</span></span><br>
+      <span class="word"><span><em>искусством,</em></span></span><br>
+      <span class="word"><span>каждый день.</span></span>
+    </h1>
+    <p class="hero-deck">
+      ARTEFACT — просветительский проект о живописи, архитектуре и стилях. Более 70 авторских видео и тысяча историй, в которых картины перестают быть тихими.
+    </p>
+    <div class="hero-cta">
+      <a href="gallery.html" class="btn-primary" data-hover="view">
+        <span>Войти в галерею</span>
+        <span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </a>
+      <a href="#manifesto" class="btn-ghost">
+        Манифест проекта
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 4 V20 M6 14 L12 20 L18 14"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="frame frame-1" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=900&q=80" alt="Портрет эпохи Возрождения" loading="lazy">
+      <div class="frame-label">№ 001 · Ренессанс</div>
+    </div>
+    <div class="frame frame-2" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?auto=format&fit=crop&w=700&q=80" alt="Готическая архитектура" loading="lazy">
+      <div class="frame-label">№ 002 · Готика</div>
+    </div>
+    <div class="frame frame-3" data-hover="view">
+      <img src="https://images.unsplash.com/photo-1565060169187-5284a3b1a8b6?auto=format&fit=crop&w=500&q=80" alt="Барочный фрагмент" loading="lazy">
+      <div class="frame-label">№ 003</div>
+    </div>
+  </div>
+
+  <div class="hero-side-info">
+    <div class="side-num active">01</div>
+    <div class="side-num">02</div>
+    <div class="side-num">03</div>
+  </div>
+
+  <div class="hero-bottom">
     <div>
-      <span class="badge"><span class="dot"></span>IT Automation &amp; Development</span>
-      <h1 class="display">
-        <span class="ln"><span>AUTOMATE</span></span>
-        <span class="ln italic"><span>INTEGRATE</span></span>
-        <span class="ln"><span>SCALE</span><span class="diamond"></span></span>
-      </h1>
-      <p class="lede">Custom IT systems, AI-powered automation, and end-to-end software development — built for businesses that refuse to stand still.</p>
-      <div class="ctas">
-        <a href="#services" class="btn btn-primary">Discover More
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-        </a>
-        <a href="#process" class="btn btn-ghost"><span class="play">▶</span>How It Works</a>
-      </div>
+      <div class="barcode"></div>
+      SN-ART-2026-0427 · просвещение
     </div>
-
-    <div class="hero-visual" aria-hidden="true">
-      <div class="hv-frame">
-        <span class="hv-mark m1"></span>
-        <span class="hv-mark m2"></span>
-        <span class="hv-mark m3"></span>
-        <div class="hv-orb">
-          <svg viewBox="-200 -200 400 400">
-            <defs>
-              <radialGradient id="coreGrad" cx="0" cy="0" r="60" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stop-color="#ffffff"/>
-                <stop offset="40%" stop-color="#00F0D0"/>
-                <stop offset="100%" stop-color="#003a33"/>
-              </radialGradient>
-              <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#00E5CC" stop-opacity="0"/>
-                <stop offset="50%" stop-color="#00E5CC" stop-opacity="1"/>
-                <stop offset="100%" stop-color="#00E5CC" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <circle class="hv-ring r1" r="170"/>
-            <circle class="hv-ring r2" r="130"/>
-            <circle class="hv-ring r3" r="90"/>
-            <!-- crossing arcs -->
-            <ellipse class="hv-ring r2" rx="170" ry="60"/>
-            <ellipse class="hv-ring r3" rx="60" ry="170"/>
-            <!-- connecting lines -->
-            <path class="hv-line pulse" d="M-170 0 L-60 -40 L0 0 L60 40 L170 0"/>
-            <path class="hv-line" d="M0 -170 L20 -60 L0 0 L-20 60 L0 170"/>
-            <path class="hv-line pulse" d="M-120 -120 L-40 -30 L40 30 L120 120"/>
-            <!-- nodes -->
-            <circle class="hv-node" cx="-170" cy="0" r="4"/>
-            <circle class="hv-node" cx="170" cy="0" r="4"/>
-            <circle class="hv-node" cx="0" cy="-170" r="4"/>
-            <circle class="hv-node" cx="0" cy="170" r="4"/>
-            <circle class="hv-node" cx="-120" cy="-120" r="3"/>
-            <circle class="hv-node" cx="120" cy="120" r="3"/>
-            <circle class="hv-node" cx="-90" cy="0" r="3"/>
-            <circle class="hv-node" cx="90" cy="0" r="3"/>
-            <!-- core -->
-            <circle class="hv-core" r="34"/>
-            <circle r="14" fill="#001815"/>
-            <circle r="6" fill="#00F0D0"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="stat-card s1">
-        <div class="num">50<span style="color:var(--teal)">+</span></div>
-        <div class="lbl">Team Members</div>
-      </div>
-      <div class="stat-card s2">
-        <div class="num">3</div>
-        <div class="lbl">Global Regions</div>
-      </div>
-      <div class="stat-card s3">
-        <div class="num">6<span style="color:var(--teal)">+</span></div>
-        <div class="lbl">Service Domains</div>
-      </div>
+    <div style="text-align:right">
+      Ноябрь / Декабрь<br>
+      понедельник — воскресенье · круглосуточно
     </div>
   </div>
 </section>
 
-<!-- SERVICES -->
-<section class="sec services" id="services">
-  <div class="wrap">
-    <div class="reveal">
-      <span class="eyebrow">What we do</span>
-      <h2 class="sec-h">What we <em>build</em></h2>
-      <p class="sec-sub">End-to-end solutions engineered around your business — not bolted onto it.</p>
+<section class="ticker">
+  <div class="ticker-track">
+    <div>
+      <span>Романика</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Готика</em>
+      <span class="ticker-dot"></span>
+      <span>Проторенессанс</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Ренессанс</em>
+      <span class="ticker-dot"></span>
+      <span>Барокко</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Рококо</em>
+      <span class="ticker-dot"></span>
+      <span>Классицизм</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Романтизм</em>
+      <span class="ticker-dot"></span>
+      <span>Модерн</span>
     </div>
-    <div class="svc-grid">
-      <!-- 6 cards -->
-      <article class="svc reveal">
-        <span class="svc-num">01</span>
-        <div class="svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
-        <h3>iOS &amp; Android Apps</h3>
-        <p>Native mobile applications built for performance and scale.</p>
-      </article>
-      <article class="svc reveal">
-        <span class="svc-num">02</span>
-        <div class="svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M2 9h20M7 22h10"/></svg></div>
-        <h3>Complex Web Systems</h3>
-        <p>Scalable platforms, dashboards, and enterprise web applications.</p>
-      </article>
-      <article class="svc reveal">
-        <span class="svc-num">03</span>
-        <div class="svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3h0a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8h0a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></div>
-        <h3>Business Automation</h3>
-        <p>Full process automation tailored to your exact workflows.</p>
-      </article>
-      <article class="svc reveal">
-        <span class="svc-num">04</span>
-        <div class="svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a4 4 0 0 1 4 4v2h2a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-2v2a4 4 0 0 1-4 4 4 4 0 0 1-4-4v-2H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3h2V6a4 4 0 0 1 4-4z"/><circle cx="9" cy="11" r="1" fill="currentColor"/><circle cx="15" cy="11" r="1" fill="currentColor"/></svg></div>
-        <h3>AI Integration</h3>
-        <p>Intelligent automation using modern machine learning and LLM tools.</p>
-      </article>
-      <article class="svc reveal">
-        <span class="svc-num">05</span>
-        <div class="svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M3 12l9 4 9-4M3 17l9 4 9-4"/></svg></div>
-        <h3>Custom CRM Systems</h3>
-        <p>CRM platforms built specifically for your business model with full financial control.</p>
-      </article>
-      <article class="svc reveal">
-        <span class="svc-num">06</span>
-        <div class="svc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="18" r="3"/><path d="M9 6h6M6 9v6M18 9v6M9 18h6"/></svg></div>
-        <h3>Service Integration</h3>
-        <p>Seamless connections between complex third-party APIs and internal systems.</p>
-      </article>
+    <div aria-hidden="true">
+      <span>Романика</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Готика</em>
+      <span class="ticker-dot"></span>
+      <span>Проторенессанс</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Ренессанс</em>
+      <span class="ticker-dot"></span>
+      <span>Барокко</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Рококо</em>
+      <span class="ticker-dot"></span>
+      <span>Классицизм</span>
+      <span class="ticker-star"><svg viewBox="0 0 24 24"><use href="#star4"/></svg></span>
+      <em>Романтизм</em>
+      <span class="ticker-dot"></span>
+      <span>Модерн</span>
     </div>
   </div>
 </section>
 
-<!-- CASES -->
-<section class="sec" id="cases">
-  <div class="wrap">
-    <div class="reveal">
-      <span class="eyebrow">Selected work</span>
-      <h2 class="sec-h">Selected <em>work</em></h2>
-      <p class="sec-sub">Confidentiality is our standard — here's what we can share.</p>
-    </div>
-
-    <div style="margin-top:60px">
-      <article class="case reveal">
-        <div class="case-tag">— Transport &amp; Logistics</div>
-        <div class="case-body">
-          <h3>Fleet Operations Platform</h3>
-          <p>A comprehensive internal management platform for a large transportation company: automated trip tracking, fuel consumption monitoring, payroll, accounting workflows, and one-click document generation — waybills, invoices, internal reports.</p>
-          <ul class="case-out">
-            <li>Trip &amp; fuel telemetry consolidated into a single source of truth</li>
-            <li>Document generation reduced from hours to seconds</li>
-            <li>Payroll &amp; accounting fully automated against operational data</li>
-          </ul>
-        </div>
-        <div class="case-accent">
-          <span class="num">01</span>
-          Internal Platform
-        </div>
-      </article>
-
-      <article class="case reveal">
-        <div class="case-tag">— Construction Tech</div>
-        <div class="case-body">
-          <h3>Conversational Site Monitoring</h3>
-          <p>An automated building monitoring system for residential construction projects. Plain-text site updates are converted into structured reports, cross-checked against project budgets, and surfaced as a complete real-time view of every object — all inside a single conversation-style interface.</p>
-          <ul class="case-out">
-            <li>Unstructured field input → structured reporting, instantly</li>
-            <li>Live budget &amp; progress reconciliation across every object</li>
-            <li>One conversational surface replaces fragmented tooling</li>
-          </ul>
-        </div>
-        <div class="case-accent">
-          <span class="num">02</span>
-          AI &amp; Reporting
-        </div>
-      </article>
-
-      <article class="case reveal">
-        <div class="case-tag">— Food &amp; Delivery</div>
-        <div class="case-body">
-          <h3>Multi-Outlet Delivery Apps</h3>
-          <p>iOS and Android delivery apps for a pizza chain in Uzbekistan — with real-time per-outlet menu sync (showing only items currently in stock at each location), integration with the in-house delivery department, and a dedicated courier app for order management.</p>
-          <ul class="case-out">
-            <li>Per-outlet stock-aware menus, in real time</li>
-            <li>Native iOS &amp; Android with shared product surface</li>
-            <li>Dedicated courier app integrated with internal dispatch</li>
-          </ul>
-        </div>
-        <div class="case-accent">
-          <span class="num">03</span>
-          Mobile · iOS &amp; Android
-        </div>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- METRICS / PROCESS -->
-<section class="sec metrics" id="process">
-  <div class="wrap">
-    <div class="reveal">
-      <span class="eyebrow">By the numbers</span>
-      <h2 class="sec-h">Built to scale.<br/><em>Designed to last.</em></h2>
-    </div>
-
-    <div class="metrics-row">
-      <div class="metric reveal">
-        <div class="big"><span class="counter" data-to="90">0</span><span class="plus">+</span></div>
-        <div class="lbl">Successful IT Projects</div>
-      </div>
-      <div class="metric reveal">
-        <div class="big"><span class="counter" data-to="50">0</span><span class="plus">+</span></div>
-        <div class="lbl">Team Members</div>
-      </div>
-      <div class="metric reveal">
-        <div class="big"><span class="counter" data-to="3">0</span></div>
-        <div class="lbl">Continents</div>
-      </div>
-      <div class="metric reveal">
-        <div class="big"><span class="counter" data-to="6">0</span><span class="plus">+</span></div>
-        <div class="lbl">Core Service Domains</div>
-      </div>
-      <div class="metric reveal">
-        <div class="big"><span class="counter" data-to="100">0</span><span class="plus">%</span></div>
-        <div class="lbl">Custom-Built</div>
-      </div>
-    </div>
-
-    <div class="reveal">
-      <span class="eyebrow">How we deliver</span>
-      <h3 style="font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;font-size:36px;margin:18px 0 24px;letter-spacing:.01em">A five-stage delivery flow</h3>
-    </div>
-
-    <div class="flow reveal">
-      <svg viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid meet" class="flow-svg">
-        <defs>
-          <linearGradient id="flowLine" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="#00E5CC" stop-opacity="0.2"/>
-            <stop offset="50%" stop-color="#00E5CC" stop-opacity="1"/>
-            <stop offset="100%" stop-color="#00E5CC" stop-opacity="0.2"/>
-          </linearGradient>
-          <filter id="glow"><feGaussianBlur stdDeviation="3"/></filter>
-        </defs>
-        <line x1="120" y1="100" x2="1080" y2="100" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-        <line x1="120" y1="100" x2="1080" y2="100" stroke="url(#flowLine)" stroke-width="1.5" stroke-dasharray="6 12"/>
-        <g transform="translate(120,100)">
-          <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
-          <circle r="6" fill="#00E5CC"/>
-          <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">DISCOVERY</text>
-          <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">01</text>
-        </g>
-        <g transform="translate(360,100)">
-          <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
-          <circle r="6" fill="#00E5CC"/>
-          <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">ARCHITECTURE</text>
-          <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">02</text>
-        </g>
-        <g transform="translate(600,100)">
-          <circle r="26" fill="rgba(0,229,204,0.18)" stroke="#00E5CC" stroke-width="1.6"/>
-          <circle r="8" fill="#00F0D0"/>
-          <text y="-46" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">DEVELOPMENT</text>
-          <text y="58" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">03</text>
-        </g>
-        <g transform="translate(840,100)">
-          <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
-          <circle r="6" fill="#00E5CC"/>
-          <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">INTEGRATION</text>
-          <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">04</text>
-        </g>
-        <g transform="translate(1080,100)">
-          <circle r="22" fill="rgba(0,229,204,0.08)" stroke="#00E5CC" stroke-width="1.4"/>
-          <circle r="6" fill="#00E5CC"/>
-          <text y="-44" text-anchor="middle" fill="#e8f1ef" font-family="Barlow Condensed" font-size="20" font-weight="700" letter-spacing="2">DELIVERY</text>
-          <text y="56" text-anchor="middle" fill="#5b6663" font-family="Barlow Condensed" font-size="13" letter-spacing="3">05</text>
-        </g>
-        <circle r="5" fill="#00F0D0" filter="url(#glow)">
-          <animateMotion dur="4s" repeatCount="indefinite" path="M120 100 L1080 100"/>
-        </circle>
-      </svg>
-      <ol class="flow-mobile">
-        <li class="flow-step"><span class="fs-num">01</span><span class="fs-title">Discovery</span></li>
-        <li class="flow-step"><span class="fs-num">02</span><span class="fs-title">Architecture</span></li>
-        <li class="flow-step active"><span class="fs-num">03</span><span class="fs-title">Development</span></li>
-        <li class="flow-step"><span class="fs-num">04</span><span class="fs-title">Integration</span></li>
-        <li class="flow-step"><span class="fs-num">05</span><span class="fs-title">Delivery</span></li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<!-- ABOUT -->
-<section class="sec" id="about">
-  <div class="wrap">
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <span class="eyebrow">About</span>
-        <h2 class="sec-h">A distributed <em>build team.</em></h2>
-        <p><strong style="color:var(--ink);font-weight:600">Elyptix is an international IT company</strong> that designs, builds, and integrates custom software systems for businesses that need more than off-the-shelf tools. We specialise in end-to-end product development, AI-powered automation, and complex service integrations — from native mobile apps and enterprise web platforms to bespoke CRM systems and intelligent business workflows.</p>
-        <p style="margin-top:18px">With <strong style="color:var(--teal);font-weight:600">90+ successful IT projects</strong> delivered across the Americas, Europe, and Asia, our team of 50+ engineers, designers, and strategists doesn’t sell templates — we build systems that solve real problems, integrate with your existing tools, and grow with your business.</p>
-      </div>
-      <div class="reveal">
-        <div class="region-map">
-          <svg viewBox="0 0 800 400" fill="none">
-            <!-- minimal world dot map -->
-            <g fill="rgba(255,255,255,0.18)">
-              <!-- generated dot grid representing continents (loose) -->
-              <!-- americas -->
-              <circle cx="160" cy="140" r="2"/><circle cx="170" cy="160" r="2"/><circle cx="180" cy="170" r="2"/><circle cx="155" cy="180" r="2"/><circle cx="170" cy="200" r="2"/><circle cx="180" cy="220" r="2"/><circle cx="190" cy="240" r="2"/><circle cx="200" cy="260" r="2"/><circle cx="210" cy="280" r="2"/><circle cx="220" cy="300" r="2"/><circle cx="230" cy="290" r="2"/><circle cx="200" cy="220" r="2"/><circle cx="190" cy="200" r="2"/><circle cx="210" cy="200" r="2"/><circle cx="220" cy="180" r="2"/>
-              <!-- europe -->
-              <circle cx="380" cy="130" r="2"/><circle cx="400" cy="120" r="2"/><circle cx="410" cy="135" r="2"/><circle cx="420" cy="145" r="2"/><circle cx="395" cy="150" r="2"/><circle cx="405" cy="160" r="2"/><circle cx="430" cy="155" r="2"/><circle cx="440" cy="170" r="2"/><circle cx="420" cy="170" r="2"/><circle cx="450" cy="140" r="2"/>
-              <!-- africa -->
-              <circle cx="420" cy="200" r="2"/><circle cx="430" cy="220" r="2"/><circle cx="440" cy="240" r="2"/><circle cx="450" cy="260" r="2"/><circle cx="460" cy="280" r="2"/><circle cx="445" cy="300" r="2"/><circle cx="430" cy="290" r="2"/><circle cx="455" cy="220" r="2"/><circle cx="465" cy="240" r="2"/>
-              <!-- asia -->
-              <circle cx="500" cy="140" r="2"/><circle cx="520" cy="150" r="2"/><circle cx="540" cy="160" r="2"/><circle cx="560" cy="170" r="2"/><circle cx="580" cy="160" r="2"/><circle cx="600" cy="170" r="2"/><circle cx="620" cy="180" r="2"/><circle cx="540" cy="180" r="2"/><circle cx="560" cy="200" r="2"/><circle cx="580" cy="210" r="2"/><circle cx="600" cy="220" r="2"/><circle cx="620" cy="220" r="2"/><circle cx="640" cy="200" r="2"/><circle cx="650" cy="190" r="2"/><circle cx="660" cy="180" r="2"/>
-              <!-- oceania -->
-              <circle cx="640" cy="290" r="2"/><circle cx="660" cy="295" r="2"/><circle cx="680" cy="290" r="2"/><circle cx="650" cy="310" r="2"/>
-            </g>
-            <!-- connection arcs -->
-            <path d="M210 230 Q 320 80 410 150" stroke="rgba(0,229,204,0.5)" stroke-width="1" stroke-dasharray="3 4" fill="none"/>
-            <path d="M410 150 Q 510 60 600 180" stroke="rgba(0,229,204,0.5)" stroke-width="1" stroke-dasharray="3 4" fill="none"/>
-          </svg>
-          <span class="pin americas"></span>
-          <span class="pin europe"></span>
-          <span class="pin asia"></span>
-          <div class="region-badges">
-            <span class="rb"><span class="d"></span>Americas</span>
-            <span class="rb"><span class="d"></span>Europe</span>
-            <span class="rb"><span class="d"></span>Asia</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section class="sec" id="contact">
-  <div class="wrap">
-    <div class="reveal">
-      <span class="eyebrow">Contact</span>
-      <h2 class="sec-h">Let's build <em>something.</em></h2>
-      <p class="sec-sub">Tell us about the system you need. We'll come back with a build plan, not a sales pitch.</p>
-    </div>
-
-    <div class="contact-grid">
-      <div class="contact-info reveal">
-        <div class="ci-row">
-          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.33 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-          <div>
-            <div class="lbl">Phone</div>
-            <a class="val" href="tel:+447537168702">+44 7537 168 702</a>
-          </div>
-        </div>
-        <div class="ci-row">
-          <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
-          <div>
-            <div class="lbl">Headquarters</div>
-            <div class="val addr">RM 5003, 5/F, Yau Lee Centre, 45 Hoi Yuen Road, Kwun Tong, Hong Kong</div>
-          </div>
-        </div>
-		<div class="ci-row">
-		  <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M4 4l8 8 8-8"/></svg></div>
-		  <div>
-			<div class="lbl">General</div>
-			<a href="mailto:elyptixtechhk@gmail.com" class="val" style="transition: color 0.2s ease;" onmouseover="this.style.color='#00E5CC'" onmouseout="this.style.color=''">elyptixtechhk@gmail.com</a>
-		  </div>
-		</div>
-      </div>
-
-      <form class="form reveal" id="contactForm" novalidate>
-        <div class="form-stack">
-          <div class="form-fields">
-            <div class="field"><label for="cf-name">Name</label><input id="cf-name" name="name" type="text" required placeholder="Your full name"/></div>
-            <div class="field"><label for="cf-email">Email</label><input id="cf-email" name="email" type="email" required placeholder="you@company.com"/></div>
-            <div class="field"><label for="cf-msg">Project brief</label><textarea id="cf-msg" name="message" required placeholder="What are you trying to build?"></textarea></div>
-            <button type="submit" class="submit" id="formSubmit">
-              <span class="submit-label">Send Message →</span>
-              <span class="submit-loader"><span></span><span></span><span></span></span>
-            </button>
-            <div class="form-msg" id="formMsg"></div>
-          </div>
-          <div class="form-success" id="formSuccess" aria-hidden="true">
-            <svg class="success-check" viewBox="0 0 80 80">
-              <circle class="sc-bg" cx="40" cy="40" r="36"/>
-              <circle class="sc-ring" cx="40" cy="40" r="36"/>
-              <path class="sc-tick" d="M24 41 L36 53 L57 30"/>
-            </svg>
-            <h3>Message sent</h3>
-            <p>Thanks — we’ve received your brief.<br/>Expect a reply within one business day.</p>
-            <button type="button" class="success-again" id="formAgain">Send another →</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="wrap">
-    <div class="foot-top">
+<section class="manifesto" id="manifesto">
+  <div class="manifesto-left reveal">
+    <div class="section-tag">Манифест · §I</div>
+    <h2 class="section-title">
+      Искусство — не<br>
+      выставка, а <em>привычка</em><br>
+      смотреть.
+    </h2>
+    <div class="manifesto-stats reveal-stagger">
       <div>
-        <div class="logo"><span class="mark">ELYPTIX</span><span class="sub">Limited</span></div>
-        <p class="foot-addr">RM 5003, 5/F, Yau Lee Centre, 45 Hoi Yuen Road, Kwun Tong, Hong Kong</p>
+        <div class="stat-num">70<em>+</em></div>
+        <div class="stat-label">Авторских видео</div>
       </div>
-      <div class="foot-links">
-        <button data-modal="privacy">Privacy Policy</button>
-        <button data-modal="terms">Terms of Use</button>
-        <button data-modal="cookie">Cookie Policy</button>
+      <div>
+        <div class="stat-num">1000<em>+</em></div>
+        <div class="stat-label">Опубликовано фактов</div>
       </div>
-      <div class="foot-phone"><a href="tel:+447537168702" style="transition:color .2s ease" onmouseover="this.style.color='var(--teal)'" onmouseout="this.style.color=''">+44 7537 168 702</a></div>
+      <div>
+        <div class="stat-num">V<em>лет</em></div>
+        <div class="stat-label">В эфире с 2021</div>
+      </div>
     </div>
-    <div class="foot-bar">
-      <span>© 2026 Elyptix Limited. All rights reserved.</span>
-      <span>Registered in Hong Kong</span>
+  </div>
+
+  <div class="manifesto-text reveal">
+    <p><span class="drop">П</span>роект ARTEFACT родился в июле 2021 года и начался с фильма об архитектуре средневековья. С марта 2023 мы — часть информационного холдинга VAW, но идея осталась прежней: рассказывать об искусстве так, чтобы хотелось задержаться у картины подольше.</p>
+    <p>Мы делаем кадр за кадром, факт за фактом — от первобытных пещер до модерна. Без академического тумана, но и без упрощений. Так, как рассказал бы вам друг, влюблённый в живопись.</p>
+    <p style="font-style:italic;color:var(--gold-2)">«Чтобы понять искусство, им надо жить, каждый день открывать что-то новое и ранее неизведанное для себя.» — В. Валиев</p>
+  </div>
+</section>
+
+<section class="eras">
+  <div class="eras-head reveal">
+    <div>
+      <div class="section-tag">Хронология · §II</div>
+      <h2 class="section-title">От первобытности<br>до <em>модерна</em>.</h2>
     </div>
+    <div class="eras-nav">
+      <button class="era-pill active">Все</button>
+      <button class="era-pill">Средние века</button>
+      <button class="era-pill">Возрождение</button>
+      <button class="era-pill">Новое время</button>
+    </div>
+  </div>
+
+  <div class="eras-track">
+    <a class="era-card" href="eras.html#romanica" data-hover="view">
+      <div class="era-img">
+        <img src="https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=700&q=80" alt="Романика">
+        <div class="era-roman">I</div>
+        <div class="era-info">
+          <div class="era-name"><em>Романика</em></div>
+          <div class="era-date">X — XII век</div>
+        </div>
+      </div>
+      <div class="era-cta">
+        <span>Эпоха камня и тишины</span>
+        <span class="arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </div>
+    </a>
+
+    <a class="era-card" href="eras.html#gothic" data-hover="view">
+      <div class="era-img">
+        <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=700&q=80" alt="Готика">
+        <div class="era-roman">II</div>
+        <div class="era-info">
+          <div class="era-name">Готика</div>
+          <div class="era-date">сер. XII — XV век</div>
+        </div>
+      </div>
+      <div class="era-cta">
+        <span>Стрельчатый свод и витраж</span>
+        <span class="arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </div>
+    </a>
+
+    <a class="era-card" href="eras.html#proto" data-hover="view">
+      <div class="era-img">
+        <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?auto=format&fit=crop&w=700&q=80" alt="Проторенессанс">
+        <div class="era-roman">III</div>
+        <div class="era-info">
+          <div class="era-name"><em>Прото-</em>ренессанс</div>
+          <div class="era-date">XIII — XIV век</div>
+        </div>
+      </div>
+      <div class="era-cta">
+        <span>Джотто и заря нового</span>
+        <span class="arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </div>
+    </a>
+
+    <a class="era-card" href="eras.html#renaissance" data-hover="view">
+      <div class="era-img">
+        <img src="https://images.unsplash.com/photo-1577720643272-265f09367456?auto=format&fit=crop&w=700&q=80" alt="Ренессанс">
+        <div class="era-roman">IV</div>
+        <div class="era-info">
+          <div class="era-name">Ренессанс</div>
+          <div class="era-date">XV — XVI век</div>
+        </div>
+      </div>
+      <div class="era-cta">
+        <span>Человек в центре мира</span>
+        <span class="arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </div>
+    </a>
+
+    <a class="era-card" href="eras.html#baroque" data-hover="view">
+      <div class="era-img">
+        <img src="https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?auto=format&fit=crop&w=700&q=80" alt="Барокко">
+        <div class="era-roman">V</div>
+        <div class="era-info">
+          <div class="era-name"><em>Барокко</em></div>
+          <div class="era-date">XVII век</div>
+        </div>
+      </div>
+      <div class="era-cta">
+        <span>Светотень и драма</span>
+        <span class="arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="masterpiece">
+  <div class="mp-grid">
+    <div class="mp-image-wrap reveal">
+      <div class="mp-image" data-hover="view">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Ilya_Repin_-_%D0%9A%D1%80%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9_%D1%85%D0%BE%D0%B4_%D0%B2_%D0%9A%D1%83%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%B3%D1%83%D0%B1%D0%B5%D1%80%D0%BD%D0%B8%D0%B8_-_Google_Art_Project.jpg/1200px-Ilya_Repin_-_%D0%9A%D1%80%D0%B5%D1%81%D1%82%D0%BD%D1%8B%D0%B9_%D1%85%D0%BE%D0%B4_%D0%B2_%D0%9A%D1%83%D1%80%D1%81%D0%BA%D0%BE%D0%B9_%D0%B3%D1%83%D0%B1%D0%B5%D1%80%D0%BD%D0%B8%D0%B8_-_Google_Art_Project.jpg" alt="Крестный ход в Курской губернии">
+      </div>
+      <div class="mp-stamp">
+        Полотно недели<br><span>Vol. 04 · 2026</span>
+      </div>
+    </div>
+
+    <div class="mp-content reveal">
+      <div class="section-tag">Разбор · §III</div>
+      <h2 class="mp-title">«Крестный ход<br>в <em>Курской</em> губернии»</h2>
+      <p class="mp-author">Илья Ефимович Репин · 1880—1883</p>
+
+      <div class="mp-meta">
+        <div class="mp-meta-item">
+          <div class="l">Холст / масло</div>
+          <div class="v">175 × 280 см</div>
+        </div>
+        <div class="mp-meta-item">
+          <div class="l">Хранится в</div>
+          <div class="v">Третьяковской галерее</div>
+        </div>
+        <div class="mp-meta-item">
+          <div class="l">Жанр</div>
+          <div class="v">Бытовая живопись</div>
+        </div>
+        <div class="mp-meta-item">
+          <div class="l">Школа</div>
+          <div class="v">Передвижники</div>
+        </div>
+      </div>
+
+      <p class="mp-text">
+        В 1880 году Репин начинает полотно, в котором ежегодный Крестный Ход с Курской Коренной иконой превращается в обличительный портрет общества. На переднем плане — мужчины с белым ковчегом, по центру — богато одетая дама с иконой, слева — калеки, которых полиция не подпускает к процессии. Репин писал три года и в 1883-м показал картину на XI Передвижной выставке. Полотно купил Павел Третьяков.
+      </p>
+
+      <a href="journal.html" class="btn-primary" data-hover="view">
+        <span>Читать разбор</span>
+        <span class="btn-arrow"><svg width="14" height="14"><use href="#arrow-up-right"/></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="videos">
+  <div class="videos-head reveal">
+    <div>
+      <div class="section-tag">Студия · §IV</div>
+      <h2 class="section-title">Видео-<em>хроники</em><br>проекта.</h2>
+    </div>
+    <a href="journal.html" class="btn-ghost">Все 70 выпусков
+      <svg width="14" height="14"><use href="#arrow-right"/></svg>
+    </a>
+  </div>
+
+  <div class="video-grid reveal-stagger">
+    <a class="video-card" href="#" data-hover="view">
+      <div class="video-thumb">
+        <img src="https://images.unsplash.com/photo-1543349689-9a4d426bee8e?auto=format&fit=crop&w=900&q=80" alt="Архитектура средневековья">
+        <div class="video-duration">14:32</div>
+        <div class="video-play"><svg><use href="#play"/></svg></div>
+      </div>
+      <div class="video-cat">Архитектура · Эпизод 01</div>
+      <h3 class="video-title">Архитектура <em>средневековья:</em> язык камня</h3>
+      <div class="video-meta"><span>14 минут</span><span>·</span><span>78K просмотров</span></div>
+    </a>
+
+    <a class="video-card" href="#" data-hover="view">
+      <div class="video-thumb">
+        <img src="https://images.unsplash.com/photo-1578321709569-1bbb39e54bca?auto=format&fit=crop&w=900&q=80" alt="Импрессионизм">
+        <div class="video-duration">22:08</div>
+        <div class="video-play"><svg><use href="#play"/></svg></div>
+      </div>
+      <div class="video-cat">Стили · Эпизод 12</div>
+      <h3 class="video-title">Импрессионизм: <em>свет</em> вместо линии</h3>
+      <div class="video-meta"><span>22 минуты</span><span>·</span><span>112K просмотров</span></div>
+    </a>
+
+    <a class="video-card" href="#" data-hover="view">
+      <div class="video-thumb">
+        <img src="https://images.unsplash.com/photo-1577720580479-7d839d829c73?auto=format&fit=crop&w=900&q=80" alt="Леонардо">
+        <div class="video-duration">18:45</div>
+        <div class="video-play"><svg><use href="#play"/></svg></div>
+      </div>
+      <div class="video-cat">Личности · Эпизод 07</div>
+      <h3 class="video-title">Леонардо: <em>записные</em> книжки гения</h3>
+      <div class="video-meta"><span>18 минут</span><span>·</span><span>241K просмотров</span></div>
+    </a>
+  </div>
+</section>
+
+<section class="team">
+  <div class="team-bg-text">ARTEFACT</div>
+  <div class="team-head reveal">
+    <div>
+      <div class="section-tag">Команда · §V</div>
+      <h2 class="section-title">Те, кто <em>оживляет</em><br>тишину музеев.</h2>
+    </div>
+    <a href="about.html" class="btn-ghost">Подробнее о команде
+      <svg width="14" height="14"><use href="#arrow-right"/></svg>
+    </a>
+  </div>
+
+  <div class="team-grid reveal-stagger">
+    <div class="team-card" data-hover="view">
+      <div class="team-img">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80" alt="Алексей Щербаков">
+        <div class="team-num">I</div>
+      </div>
+      <h3 class="team-name">Алексей Щербаков</h3>
+      <div class="team-role">Сооснователь / Генеральный директор</div>
+      <p class="team-quote">«Всё, что вы можете себе представить, реально.»</p>
+    </div>
+
+    <div class="team-card" data-hover="view">
+      <div class="team-img">
+        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80" alt="Владислав Валиев">
+        <div class="team-num">II</div>
+      </div>
+      <h3 class="team-name">Владислав Валиев</h3>
+      <div class="team-role">Сооснователь / Исполнительный директор</div>
+      <p class="team-quote">«Чтобы понять искусство, им надо жить и каждый день открывать что-то новое.»</p>
+    </div>
+
+    <div class="team-card" data-hover="view">
+      <div class="team-img">
+        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=600&q=80" alt="Екатерина Круглова">
+        <div class="team-num">III</div>
+      </div>
+      <h3 class="team-name">Екатерина Круглова</h3>
+      <div class="team-role">Младший научный сотрудник</div>
+      <p class="team-quote">«Найти необыкновенное в обыкновенном. — Дидро»</p>
+    </div>
+  </div>
+</section>
+
+<section class="newsletter">
+  <div class="newsletter-inner reveal">
+    <div class="section-tag">Письма из галереи · §VI</div>
+    <h2 class="newsletter-title">Получайте <em>истории</em> картин<br>раз в неделю.</h2>
+    <p class="newsletter-text">Один разбор полотна, одна эпоха, одна редкая деталь — каждый вторник в вашей почте. Никакого спама, только живопись.</p>
+    <form class="newsletter-form" onsubmit="event.preventDefault();this.querySelector('button').textContent='Спасибо ✦'">
+      <input type="email" placeholder="Ваш e-mail" required>
+      <button type="submit">Подписаться</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-grid">
+    <div class="foot-col">
+      <a href="index.html" class="foot-logo">
+        <img src="logo.svg" alt="ARTEFACT" class="logo-img foot-logo-img">
+      </a>
+      <p class="foot-tag">Просветительский проект об истории искусств. С 2021 — в составе информационного холдинга VAW.</p>
+      <div class="foot-socials">
+        <a href="https://vk.com/artefactam" class="foot-soc" data-hover="view" aria-label="VK"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.785 16.241s.288-.032.435-.193c.135-.148.131-.422.131-.422s-.018-1.288.575-1.481c.585-.193 1.336 1.288 2.131 1.853.602.428 1.058.337 1.058.337l2.123-.032s1.111-.07.583-.953c-.043-.072-.308-.65-1.585-1.85-1.34-1.255-1.16-1.052.452-3.218 1.179-1.583 1.65-2.55 1.502-2.965-.139-.397-.997-.292-.997-.292l-2.85.018s-.211-.029-.367.067c-.153.094-.252.314-.252.314s-.45 1.213-1.05 2.246c-1.27 2.18-1.778 2.295-1.985 2.158-.483-.317-.363-1.278-.363-1.96 0-2.134.32-3.024-.624-3.255-.313-.077-.544-.128-1.346-.137-1.029-.011-1.9.003-2.395.245-.328.16-.582.518-.428.539.19.026.62.117.85.43.298.404.288 1.31.288 1.31s.171 2.529-.4 2.844c-.394.215-.93-.225-2.066-2.197-.582-1.013-1.022-2.131-1.022-2.131s-.083-.205-.234-.314c-.182-.131-.437-.173-.437-.173l-2.706.018s-.408.011-.557.187c-.133.156-.011.479-.011.479s2.117 4.964 4.518 7.474c2.197 2.297 4.69 2.146 4.69 2.146h1.131z"/></svg></a>
+        <a href="https://t.me/ARTEFACTAM" class="foot-soc" data-hover="view" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.485 2 2 6.485 2 12s4.485 10 10 10 10-4.485 10-10S17.515 2 12 2zm4.526 7.071l-1.503 7.084c-.114.5-.41.624-.832.388l-2.297-1.694-1.108 1.067c-.123.122-.227.226-.464.226l.166-2.353 4.282-3.872c.186-.166-.04-.258-.289-.092l-5.291 3.331-2.281-.713c-.495-.155-.505-.495.103-.732l8.92-3.44c.413-.151.774.099.594.8z"/></svg></a>
+        <a href="https://www.youtube.com/channel/UCxVeixiBg8rmoQ30OiCyPHw" class="foot-soc" data-hover="view" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.582 6.186a2.506 2.506 0 0 0-1.768-1.768C18.254 4 12 4 12 4s-6.254 0-7.814.418a2.506 2.506 0 0 0-1.768 1.768C2 7.746 2 12 2 12s0 4.254.418 5.814a2.506 2.506 0 0 0 1.768 1.768C5.746 20 12 20 12 20s6.254 0 7.814-.418a2.506 2.506 0 0 0 1.768-1.768C22 16.254 22 12 22 12s0-4.254-.418-5.814zM10 15.464V8.536L16 12l-6 3.464z"/></svg></a>
+        <a href="#" class="foot-soc" data-hover="view" aria-label="TikTok"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.81 21.32a6.34 6.34 0 0 0 10.86-4.43V8.49a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.85-.42z"/></svg></a>
+      </div>
+    </div>
+
+    <div class="foot-col">
+      <h4>Проект</h4>
+      <a href="about.html">О нас</a>
+      <a href="about.html#team">Команда</a>
+      <a href="#">Холдинг VAW</a>
+      <a href="#">Партнёры</a>
+    </div>
+
+    <div class="foot-col">
+      <h4>Контент</h4>
+      <a href="gallery.html">Галерея</a>
+      <a href="eras.html">Эпохи</a>
+      <a href="journal.html">Журнал</a>
+      <a href="tournaments.html">Турниры</a>
+    </div>
+
+    <div class="foot-col">
+      <h4>Контакты</h4>
+      <a href="mailto:artefact.art@mail.ru">artefact.art@mail.ru</a>
+      <a href="#">Стать автором</a>
+      <a href="#">Реклама</a>
+      <a href="#">Политика</a>
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <div>© ARTEFACT, MMXXI — MMXXVI · Made by V.Vl</div>
+    <div>Москва · Холдинг VAW</div>
   </div>
 </footer>
 
-<!-- MODALS -->
-<div class="modal-back" id="modalBack">
-  <div class="modal" id="modal">
-    <button class="modal-x" id="modalX" aria-label="Close">✕</button>
-    <div id="modalContent"></div>
-  </div>
-</div>
-
-<!-- COOKIE BANNER -->
-<div class="cookie" id="cookie">
-  <h4>Cookies</h4>
-  <p>We use cookies to operate the site, measure usage, and improve performance. You can accept all or manage preferences. See our Cookie Policy for details.</p>
-  <div class="cookie-actions">
-    <button class="accept" id="cookieAccept">Accept All</button>
-    <button class="manage" id="cookieManage">Manage Preferences</button>
-  </div>
-</div>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-(() => {
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  // Navbar scroll
-  const nav = document.getElementById('nav');
-  const onScroll = () => {
-    nav.classList.toggle('scrolled', window.scrollY > 30);
-  };
-  window.addEventListener('scroll', onScroll, { passive:true });
-  onScroll();
-
-  // Reveal on scroll
-  const io = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        e.target.classList.add('in');
-        // counters
-        if(e.target.classList.contains('metric')){
-          const el = e.target.querySelector('.counter');
-          if(el && !el.dataset.done){
-            el.dataset.done = '1';
-            const to = parseInt(el.dataset.to,10);
-            if(reduce){ el.textContent = to; }
-            else {
-              const dur = 1400; const start = performance.now();
-              const tick = (t) => {
-                const p = Math.min(1,(t-start)/dur);
-                const ease = 1-Math.pow(1-p,3);
-                el.textContent = Math.round(to*ease);
-                if(p<1) requestAnimationFrame(tick);
-              };
-              requestAnimationFrame(tick);
-            }
-          }
-        }
-        io.unobserve(e.target);
-      }
-    });
-  }, {threshold:0.18});
-  document.querySelectorAll('.reveal, .metric').forEach(el=>io.observe(el));
-
-  // Cursor glow (desktop only)
-  const isDesktop = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  if(isDesktop && !reduce){
-    document.body.classList.add('cursor-on');
-    const cg = document.getElementById('cursorGlow');
-    const cDot = document.getElementById('cursorDot');
-    const cRing = document.getElementById('cursorRing');
-    let tx=0,ty=0,gx=0,gy=0,dx=0,dy=0,rx=0,ry=0;
-    window.addEventListener('mousemove',(e)=>{tx=e.clientX;ty=e.clientY;});
-    window.addEventListener('mousedown',()=>document.body.classList.add('cursor-press'));
-    window.addEventListener('mouseup',()=>document.body.classList.remove('cursor-press'));
-    window.addEventListener('mouseleave',()=>{cDot.style.opacity=0;cRing.style.opacity=0});
-    window.addEventListener('mouseenter',()=>{cDot.style.opacity=1;cRing.style.opacity=1});
-    // hover detection
-    const hoverSel = 'a, button, input, textarea, label, [role="button"], .svc, .case, .stat-card, .rb';
-    const textSel = 'input[type="text"], input[type="email"], textarea';
-    document.addEventListener('mouseover',(e)=>{
-      if(e.target.closest(textSel)) document.body.classList.add('cursor-text');
-      else if(e.target.closest(hoverSel)) document.body.classList.add('cursor-hover');
-    });
-    document.addEventListener('mouseout',(e)=>{
-      if(!e.relatedTarget || !e.relatedTarget.closest) return;
-      if(!e.relatedTarget.closest(textSel)) document.body.classList.remove('cursor-text');
-      if(!e.relatedTarget.closest(hoverSel)) document.body.classList.remove('cursor-hover');
-    });
-    const loop = () => {
-      gx += (tx-gx)*0.12; gy += (ty-gy)*0.12;
-      dx += (tx-dx)*0.55; dy += (ty-dy)*0.55;
-      rx += (tx-rx)*0.20; ry += (ty-ry)*0.20;
-      cg.style.transform = `translate(${gx}px, ${gy}px) translate(-50%,-50%)`;
-      cDot.style.transform = `translate(${dx}px, ${dy}px) translate(-50%,-50%)`;
-      cRing.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
-      requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);
-  }
-
-  // Mobile nav burger
-  const burger = document.getElementById('navBurger');
-  const navMobile = document.getElementById('navMobile');
-  burger.addEventListener('click', ()=>{
-    const isOpen = burger.classList.toggle('open');
-    navMobile.classList.toggle('open', isOpen);
-    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    burger.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
-  });
-  navMobile.querySelectorAll('a').forEach(a=>{
-    a.addEventListener('click', ()=>{
-      burger.classList.remove('open');
-      navMobile.classList.remove('open');
-      burger.setAttribute('aria-expanded','false');
-      burger.setAttribute('aria-label','Open menu');
-    });
-  });
-
-  // Active nav highlight
-  const sections = ['home','services','cases','about','contact'].map(id=>document.getElementById(id));
-  const navLinks = document.querySelectorAll('.nav-links a, .nm-link');
-  const sIo = new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){
-        navLinks.forEach(a=>{
-          a.classList.toggle('active', a.getAttribute('href') === '#'+e.target.id);
-        });
-      }
-    });
-  }, {rootMargin:'-40% 0px -55% 0px'});
-  sections.forEach(s=>s && sIo.observe(s));
-
-  // Contact form
-  const form = document.getElementById('contactForm');
-  const fmsg = document.getElementById('formMsg');
-  const fSubmit = document.getElementById('formSubmit');
-  const fFields = document.querySelector('.form-fields');
-  const fSuccess = document.getElementById('formSuccess');
-  document.getElementById('formAgain').addEventListener('click', ()=>{
-    fSuccess.classList.remove('show');
-    fFields.classList.remove('hidden');
-    setTimeout(()=>{
-      const first = form.querySelector('input,textarea');
-      if(first) first.focus();
-    }, 200);
-  });
-  form.addEventListener('submit',(e)=>{
-    e.preventDefault();
-    const name = form.name.value.trim();
-    const email = form.email.value.trim();
-    const msg = form.message.value.trim();
-    if(!name || !email || !msg || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
-      fmsg.textContent = 'Please fill all fields with a valid email.';
-      fmsg.classList.remove('show'); void fmsg.offsetWidth;
-      fmsg.classList.add('show');
-      return;
-    }
-    fmsg.classList.remove('show');
-    fSubmit.classList.add('loading');
-    fSubmit.disabled = true;
-    setTimeout(()=>{
-      fSubmit.classList.remove('loading');
-      fSubmit.disabled = false;
-      fFields.classList.add('hidden');
-      fSuccess.classList.add('show');
-      form.reset();
-    }, 1100);
-  });
-
-  // Modals
-  const modalBack = document.getElementById('modalBack');
-  const modalContent = document.getElementById('modalContent');
-  const modalX = document.getElementById('modalX');
-  const MODALS = {
-    privacy: {
-      h:'Privacy Policy',
-      body:`
-        <p><strong>Effective:</strong> January 2026. This Privacy Policy explains how Elyptix Limited ("we", "us") collects, uses, and protects information when you interact with our website and services.</p>
-        <h3>Information we collect</h3>
-        <p>Contact details you submit through forms (name, email, message), and basic technical data (IP address, device, browser, pages viewed) collected automatically through cookies and analytics.</p>
-        <h3>How we use information</h3>
-        <p>To respond to your enquiries, deliver services you request, operate and improve the site, and meet legal obligations. We do not sell personal data to third parties.</p>
-        <h3>Lawful bases</h3>
-        <p>We process personal data on the bases of consent, contract performance, legitimate interests, and legal obligation, as applicable under UK GDPR, EU GDPR, and Hong Kong PDPO.</p>
-        <h3>Data retention</h3>
-        <p>We retain personal data only as long as necessary for the purposes for which it was collected, or as required by law.</p>
-        <h3>Your rights</h3>
-        <p>You may request access, correction, deletion, restriction, or portability of your personal data. To exercise these rights, contact elyptixtechhk@gmail.com.</p>
-        <h3>International transfers</h3>
-        <p>Because we operate across the Americas, Europe, and Asia, your data may be transferred and processed outside your country of residence under appropriate safeguards.</p>
-        <h3>Contact</h3>
-        <p>Elyptix Limited, RM 5003, 5/F, Yau Lee Centre, 45 Hoi Yuen Road, Kwun Tong, Hong Kong. elyptixtechhk@gmail.com.</p>
-      `
-    },
-    terms: {
-      h:'Terms of Use',
-      body:`
-        <p><strong>Effective:</strong> January 2026. These Terms govern your use of the Elyptix Limited website and any services described on it.</p>
-        <h3>Acceptance</h3>
-        <p>By accessing this site you agree to these Terms. If you do not agree, please do not use the site.</p>
-        <h3>Use of the site</h3>
-        <p>You agree to use the site only for lawful purposes and in a manner that does not infringe the rights of, or restrict the use of, any third party.</p>
-        <h3>Intellectual property</h3>
-        <p>All content on this site, including text, graphics, logos, and code, is owned by or licensed to Elyptix Limited and is protected by copyright and other intellectual property laws.</p>
-        <h3>No warranties</h3>
-        <p>The site is provided "as is" without warranties of any kind. We do not guarantee that the site will be uninterrupted or error-free.</p>
-        <h3>Limitation of liability</h3>
-        <p>To the maximum extent permitted by law, Elyptix Limited is not liable for indirect, incidental, special, or consequential damages arising from your use of the site.</p>
-        <h3>Governing law</h3>
-        <p>These Terms are governed by the laws of Hong Kong SAR. Any disputes shall be resolved in the courts of Hong Kong.</p>
-        <h3>Changes</h3>
-        <p>We may update these Terms from time to time. Continued use of the site after changes constitutes acceptance of the updated Terms.</p>
-      `
-    },
-    cookie: {
-      h:'Cookie Policy',
-      body:`
-        <p><strong>Effective:</strong> January 2026. This Cookie Policy explains how Elyptix Limited uses cookies and similar technologies on our website.</p>
-        <h3>What cookies are</h3>
-        <p>Cookies are small text files stored on your device when you visit a website. They help the site function properly, remember preferences, and measure usage.</p>
-        <h3>Types of cookies we use</h3>
-        <p><strong>Strictly necessary:</strong> required for core functionality such as remembering your cookie consent.</p>
-        <p><strong>Performance &amp; analytics:</strong> help us understand how visitors interact with the site so we can improve it.</p>
-        <p><strong>Functionality:</strong> remember choices you make to provide an enhanced experience.</p>
-        <h3>Managing cookies</h3>
-        <p>You can accept or decline non-essential cookies via the banner shown on first visit, and change your settings at any time through your browser, or by reopening Manage Preferences.</p>
-        <h3>Third-party cookies</h3>
-        <p>We may use third-party services (e.g. analytics) that set their own cookies subject to their own privacy policies.</p>
-        <h3>Contact</h3>
-        <p>Questions about this policy can be sent to elyptixtechhk@gmail.com.</p>
-      `
-    }
-  };
-  const openModal = (key) => {
-    const m = MODALS[key]; if(!m) return;
-    modalContent.innerHTML = `<h2>${m.h}</h2>${m.body}`;
-    modalBack.classList.add('show');
-    document.body.style.overflow = 'hidden';
-  };
-  const closeModal = () => {
-    modalBack.classList.remove('show');
-    document.body.style.overflow = '';
-  };
-  document.querySelectorAll('[data-modal]').forEach(b=>{
-    b.addEventListener('click', ()=>openModal(b.getAttribute('data-modal')));
-  });
-  modalX.addEventListener('click', closeModal);
-  modalBack.addEventListener('click', (e)=>{ if(e.target === modalBack) closeModal(); });
-  window.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal(); });
-
-  // Cookie banner
-  const cookie = document.getElementById('cookie');
-  if(!localStorage.getItem('elyptix_cookie')){
-    setTimeout(()=>cookie.classList.add('show'), 1200);
-  }
-  document.getElementById('cookieAccept').addEventListener('click', ()=>{
-    localStorage.setItem('elyptix_cookie','accepted');
-    localStorage.setItem('elyptix_cookie_prefs', JSON.stringify({necessary:true,analytics:true,functional:true,marketing:true}));
-    cookie.classList.remove('show');
-  });
-  // cookie preferences
-  const PREF_KEY = 'elyptix_cookie_prefs';
-  const defaultPrefs = {necessary:true, analytics:false, functional:false, marketing:false};
-  function getPrefs(){
-    try{ return Object.assign({}, defaultPrefs, JSON.parse(localStorage.getItem(PREF_KEY)||'{}')); }
-    catch(e){ return Object.assign({}, defaultPrefs); }
-  }
-  function savePrefs(p){
-    localStorage.setItem(PREF_KEY, JSON.stringify(p));
-    localStorage.setItem('elyptix_cookie','set');
-  }
-  function openCookiePrefs(){
-    const p = getPrefs();
-    modalContent.innerHTML = `
-      <h2>Cookie Preferences</h2>
-      <p style="color:var(--ink-dim);font-size:14px;margin-bottom:18px">Choose which categories of cookies Elyptix may use. You can change these settings at any time.</p>
-      <div id="prefRows">
-        <div class="pref-row">
-          <div class="pref-text"><h4>Strictly necessary <span class="req">Required</span></h4><p>Essential for the site to function — security, navigation, and remembering your cookie choices. These cannot be turned off.</p></div>
-          <label class="toggle"><input type="checkbox" checked disabled/><span class="slider"></span></label>
-        </div>
-        <div class="pref-row">
-          <div class="pref-text"><h4>Performance &amp; Analytics</h4><p>Help us understand how visitors interact with the site so we can improve performance and content.</p></div>
-          <label class="toggle"><input type="checkbox" data-pref="analytics" ${p.analytics?'checked':''}/><span class="slider"></span></label>
-        </div>
-        <div class="pref-row">
-          <div class="pref-text"><h4>Functional</h4><p>Remember choices you make (such as preferences) to provide an enhanced, personalised experience.</p></div>
-          <label class="toggle"><input type="checkbox" data-pref="functional" ${p.functional?'checked':''}/><span class="slider"></span></label>
-        </div>
-        <div class="pref-row">
-          <div class="pref-text"><h4>Marketing</h4><p>Used to deliver relevant advertising and measure the effectiveness of our campaigns across channels.</p></div>
-          <label class="toggle"><input type="checkbox" data-pref="marketing" ${p.marketing?'checked':''}/><span class="slider"></span></label>
-        </div>
-      </div>
-      <div class="pref-actions">
-        <button class="save" id="prefSave">Save Preferences</button>
-        <button class="reject" id="prefReject">Reject All Non-Essential</button>
-        <button class="reject" id="prefAccept">Accept All</button>
-      </div>
-      <div class="pref-saved" id="prefSaved">✓ Your preferences have been saved.</div>
-    `;
-    modalBack.classList.add('show');
-    document.body.style.overflow = 'hidden';
-    const saved = document.getElementById('prefSaved');
-    const flash = ()=>{ saved.classList.remove('show'); void saved.offsetWidth; saved.classList.add('show'); };
-    document.getElementById('prefSave').addEventListener('click', ()=>{
-      const out = Object.assign({}, defaultPrefs);
-      modalContent.querySelectorAll('input[data-pref]').forEach(i=>{ out[i.dataset.pref] = i.checked; });
-      savePrefs(out); cookie.classList.remove('show'); flash();
-      setTimeout(closeModal, 900);
-    });
-    document.getElementById('prefReject').addEventListener('click', ()=>{
-      const out = Object.assign({}, defaultPrefs);
-      modalContent.querySelectorAll('input[data-pref]').forEach(i=>{ i.checked = false; });
-      savePrefs(out); cookie.classList.remove('show'); flash();
-    });
-    document.getElementById('prefAccept').addEventListener('click', ()=>{
-      const out = {necessary:true, analytics:true, functional:true, marketing:true};
-      modalContent.querySelectorAll('input[data-pref]').forEach(i=>{ i.checked = true; });
-      savePrefs(out); cookie.classList.remove('show'); flash();
-    });
-  }
-  document.getElementById('cookieManage').addEventListener('click', openCookiePrefs);
-})();
-</script>
+<script src="main.js"></script>
 </body>
 </html>
