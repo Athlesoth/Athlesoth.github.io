@@ -386,11 +386,11 @@
   .portal:nth-child(even){grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}
   .portal:nth-child(even) .portal-gate{order:2}
   .portal-gate{
-    position:relative;aspect-ratio:1600/1270;overflow:visible;
+    position:relative;aspect-ratio:2279/1230;overflow:visible;
   }
-  /* the site sits fully inside the opening between the columns */
+  /* the screenshot fills the wide opening between the columns */
   .portal-stage{
-    position:absolute;top:23%;left:13%;right:13%;bottom:9.5%;
+    position:absolute;top:23.6%;left:7.9%;right:7.9%;bottom:7.3%;
     border-radius:3px;overflow:hidden;background:#07060a;
     box-shadow:
       0 0 0 2px var(--gold-deep),
@@ -409,7 +409,7 @@
   /* faint patina over the preview */
   .portal-view{
     position:absolute;inset:0;width:100%;height:100%;border:0;
-    object-fit:contain;object-position:center;pointer-events:none;
+    object-fit:cover;object-position:center;pointer-events:none;
     filter:saturate(.97) contrast(1.02);background:#07060a;
   }
   .portal-loading{
@@ -767,46 +767,46 @@
             <img class="portal-view" src="images/elyptix.png" alt="Скриншот сайта Elyptix Limited" loading="lazy" decoding="async" onerror="this.style.display='none'">
             <div class="portal-glass"></div>
           </div>
-          <svg class="gate-frame" viewBox="0 0 1600 1270" preserveAspectRatio="none" aria-hidden="true">
+          <svg class="gate-frame" viewBox="0 0 2279 1230" preserveAspectRatio="none" aria-hidden="true">
             <!-- columns -->
-            <rect x="88" y="292" width="120" height="858" fill="url(#stoneLit)"/>
-            <rect x="1392" y="292" width="120" height="858" fill="url(#stoneLit)"/>
+            <rect x="60" y="294" width="120" height="842" fill="url(#stoneLit)"/>
+            <rect x="2099" y="294" width="120" height="842" fill="url(#stoneLit)"/>
             <!-- stylobate steps -->
-            <rect x="64" y="1150" width="1472" height="46" fill="url(#stoneLit)"/>
-            <rect x="34" y="1196" width="1532" height="62" fill="url(#stoneLit)"/>
+            <rect x="40" y="1140" width="2199" height="42" fill="url(#stoneLit)"/>
+            <rect x="10" y="1182" width="2259" height="48" fill="url(#stoneLit)"/>
             <g stroke="var(--gold)" stroke-width="3" opacity=".8" fill="none">
-              <line x1="64" y1="1150" x2="1536" y2="1150"/><line x1="34" y1="1196" x2="1566" y2="1196"/>
+              <line x1="40" y1="1140" x2="2239" y2="1140"/><line x1="10" y1="1182" x2="2269" y2="1182"/>
             </g>
-            <line x1="34" y1="1254" x2="1566" y2="1254" stroke="var(--gold-deep)" stroke-width="2" opacity=".5"/>
+            <line x1="10" y1="1224" x2="2269" y2="1224" stroke="var(--gold-deep)" stroke-width="2" opacity=".5"/>
             <!-- column flutes -->
             <g stroke="var(--gold)" stroke-width="1.4" opacity=".32">
-              <line x1="112" y1="330" x2="112" y2="1116"/><line x1="136" y1="330" x2="136" y2="1116"/><line x1="160" y1="330" x2="160" y2="1116"/><line x1="184" y1="330" x2="184" y2="1116"/>
-              <line x1="1416" y1="330" x2="1416" y2="1116"/><line x1="1440" y1="330" x2="1440" y2="1116"/><line x1="1464" y1="330" x2="1464" y2="1116"/><line x1="1488" y1="330" x2="1488" y2="1116"/>
+              <line x1="84" y1="324" x2="84" y2="1106"/><line x1="108" y1="324" x2="108" y2="1106"/><line x1="132" y1="324" x2="132" y2="1106"/><line x1="156" y1="324" x2="156" y2="1106"/>
+              <line x1="2123" y1="324" x2="2123" y2="1106"/><line x1="2147" y1="324" x2="2147" y2="1106"/><line x1="2171" y1="324" x2="2171" y2="1106"/><line x1="2195" y1="324" x2="2195" y2="1106"/>
             </g>
             <!-- capitals & bases -->
             <g stroke="var(--gold)" stroke-width="3.5" fill="none">
-              <line x1="80" y1="300" x2="216" y2="300"/><line x1="1384" y1="300" x2="1520" y2="300"/>
-              <line x1="80" y1="1146" x2="216" y2="1146"/><line x1="1384" y1="1146" x2="1520" y2="1146"/>
+              <line x1="52" y1="302" x2="188" y2="302"/><line x1="2091" y1="302" x2="2227" y2="302"/>
+              <line x1="52" y1="1130" x2="188" y2="1130"/><line x1="2091" y1="1130" x2="2227" y2="1130"/>
             </g>
             <g stroke="var(--gold-deep)" stroke-width="2" opacity=".7" fill="none">
-              <line x1="92" y1="318" x2="204" y2="318"/><line x1="1396" y1="318" x2="1508" y2="318"/>
-              <line x1="92" y1="1124" x2="204" y2="1124"/><line x1="1396" y1="1124" x2="1508" y2="1124"/>
+              <line x1="64" y1="320" x2="176" y2="320"/><line x1="2103" y1="320" x2="2215" y2="320"/>
+              <line x1="64" y1="1112" x2="176" y2="1112"/><line x1="2103" y1="1112" x2="2215" y2="1112"/>
             </g>
-            <circle class="gem" cx="148" cy="309" r="3" fill="var(--current)"/>
-            <circle class="gem" cx="1452" cy="309" r="3" fill="var(--current)"/>
+            <circle class="gem" cx="120" cy="311" r="3" fill="var(--current)"/>
+            <circle class="gem" cx="2159" cy="311" r="3" fill="var(--current)"/>
             <!-- entablature -->
-            <rect x="74" y="196" width="1452" height="94" fill="url(#stoneLit)"/>
+            <rect x="60" y="210" width="2159" height="80" fill="url(#stoneLit)"/>
             <g stroke="var(--gold)" stroke-width="3" opacity=".55" fill="none">
-              <line x1="180" y1="212" x2="180" y2="262"/><line x1="372" y1="212" x2="372" y2="262"/><line x1="564" y1="212" x2="564" y2="262"/><line x1="800" y1="212" x2="800" y2="262"/><line x1="1036" y1="212" x2="1036" y2="262"/><line x1="1228" y1="212" x2="1228" y2="262"/><line x1="1420" y1="212" x2="1420" y2="262"/>
+              <line x1="240" y1="226" x2="240" y2="274"/><line x1="465" y1="226" x2="465" y2="274"/><line x1="690" y1="226" x2="690" y2="274"/><line x1="915" y1="226" x2="915" y2="274"/><line x1="1140" y1="226" x2="1140" y2="274"/><line x1="1365" y1="226" x2="1365" y2="274"/><line x1="1590" y1="226" x2="1590" y2="274"/><line x1="1815" y1="226" x2="1815" y2="274"/><line x1="2040" y1="226" x2="2040" y2="274"/>
             </g>
-            <line x1="74" y1="288" x2="1526" y2="288" stroke="var(--gold)" stroke-width="3"/>
-            <line x1="60" y1="196" x2="1540" y2="196" stroke="var(--gold)" stroke-width="4"/>
+            <line x1="60" y1="288" x2="2219" y2="288" stroke="var(--gold)" stroke-width="3"/>
+            <line x1="50" y1="210" x2="2229" y2="210" stroke="var(--gold)" stroke-width="4"/>
             <!-- pediment (fronton) -->
-            <polygon points="800,28 1526,196 74,196" fill="url(#stoneLit)" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round"/>
-            <polyline points="134,180 800,66 1466,180" fill="none" stroke="var(--gold-deep)" stroke-width="2" opacity=".6"/>
-            <circle cx="800" cy="22" r="5" fill="var(--gold-bright)"/>
-            <circle class="gem" cx="800" cy="130" r="13" fill="none" stroke="var(--gold-bright)" stroke-width="2.4"/>
-            <circle class="gem" cx="800" cy="130" r="5" fill="var(--current)"/>
+            <polygon points="1139.5,16 2239,210 40,210" fill="url(#stoneLit)" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round"/>
+            <polyline points="100,196 1139.5,52 2179,196" fill="none" stroke="var(--gold-deep)" stroke-width="2" opacity=".6"/>
+            <circle cx="1139.5" cy="12" r="5" fill="var(--gold-bright)"/>
+            <circle class="gem" cx="1139.5" cy="140" r="13" fill="none" stroke="var(--gold-bright)" stroke-width="2.4"/>
+            <circle class="gem" cx="1139.5" cy="140" r="5" fill="var(--current)"/>
           </svg>
           <a class="gate-link" href="https://elyptix-tech.com/" target="_blank" rel="noopener noreferrer" aria-label="Открыть сайт elyptix-tech.com"></a>
         </div>
@@ -824,40 +824,40 @@
             <img class="portal-view" src="images/atlasway.png" alt="Скриншот сайта Atlasway Trading" loading="lazy" decoding="async" onerror="this.style.display='none'">
             <div class="portal-glass"></div>
           </div>
-          <svg class="gate-frame" viewBox="0 0 1600 1270" preserveAspectRatio="none" aria-hidden="true">
-            <rect x="88" y="292" width="120" height="858" fill="url(#stoneLit)"/>
-            <rect x="1392" y="292" width="120" height="858" fill="url(#stoneLit)"/>
-            <rect x="64" y="1150" width="1472" height="46" fill="url(#stoneLit)"/>
-            <rect x="34" y="1196" width="1532" height="62" fill="url(#stoneLit)"/>
+          <svg class="gate-frame" viewBox="0 0 2279 1230" preserveAspectRatio="none" aria-hidden="true">
+            <rect x="60" y="294" width="120" height="842" fill="url(#stoneLit)"/>
+            <rect x="2099" y="294" width="120" height="842" fill="url(#stoneLit)"/>
+            <rect x="40" y="1140" width="2199" height="42" fill="url(#stoneLit)"/>
+            <rect x="10" y="1182" width="2259" height="48" fill="url(#stoneLit)"/>
             <g stroke="var(--gold)" stroke-width="3" opacity=".8" fill="none">
-              <line x1="64" y1="1150" x2="1536" y2="1150"/><line x1="34" y1="1196" x2="1566" y2="1196"/>
+              <line x1="40" y1="1140" x2="2239" y2="1140"/><line x1="10" y1="1182" x2="2269" y2="1182"/>
             </g>
-            <line x1="34" y1="1254" x2="1566" y2="1254" stroke="var(--gold-deep)" stroke-width="2" opacity=".5"/>
+            <line x1="10" y1="1224" x2="2269" y2="1224" stroke="var(--gold-deep)" stroke-width="2" opacity=".5"/>
             <g stroke="var(--gold)" stroke-width="1.4" opacity=".32">
-              <line x1="112" y1="330" x2="112" y2="1116"/><line x1="136" y1="330" x2="136" y2="1116"/><line x1="160" y1="330" x2="160" y2="1116"/><line x1="184" y1="330" x2="184" y2="1116"/>
-              <line x1="1416" y1="330" x2="1416" y2="1116"/><line x1="1440" y1="330" x2="1440" y2="1116"/><line x1="1464" y1="330" x2="1464" y2="1116"/><line x1="1488" y1="330" x2="1488" y2="1116"/>
+              <line x1="84" y1="324" x2="84" y2="1106"/><line x1="108" y1="324" x2="108" y2="1106"/><line x1="132" y1="324" x2="132" y2="1106"/><line x1="156" y1="324" x2="156" y2="1106"/>
+              <line x1="2123" y1="324" x2="2123" y2="1106"/><line x1="2147" y1="324" x2="2147" y2="1106"/><line x1="2171" y1="324" x2="2171" y2="1106"/><line x1="2195" y1="324" x2="2195" y2="1106"/>
             </g>
             <g stroke="var(--gold)" stroke-width="3.5" fill="none">
-              <line x1="80" y1="300" x2="216" y2="300"/><line x1="1384" y1="300" x2="1520" y2="300"/>
-              <line x1="80" y1="1146" x2="216" y2="1146"/><line x1="1384" y1="1146" x2="1520" y2="1146"/>
+              <line x1="52" y1="302" x2="188" y2="302"/><line x1="2091" y1="302" x2="2227" y2="302"/>
+              <line x1="52" y1="1130" x2="188" y2="1130"/><line x1="2091" y1="1130" x2="2227" y2="1130"/>
             </g>
             <g stroke="var(--gold-deep)" stroke-width="2" opacity=".7" fill="none">
-              <line x1="92" y1="318" x2="204" y2="318"/><line x1="1396" y1="318" x2="1508" y2="318"/>
-              <line x1="92" y1="1124" x2="204" y2="1124"/><line x1="1396" y1="1124" x2="1508" y2="1124"/>
+              <line x1="64" y1="320" x2="176" y2="320"/><line x1="2103" y1="320" x2="2215" y2="320"/>
+              <line x1="64" y1="1112" x2="176" y2="1112"/><line x1="2103" y1="1112" x2="2215" y2="1112"/>
             </g>
-            <circle class="gem" cx="148" cy="309" r="3" fill="var(--current)"/>
-            <circle class="gem" cx="1452" cy="309" r="3" fill="var(--current)"/>
-            <rect x="74" y="196" width="1452" height="94" fill="url(#stoneLit)"/>
+            <circle class="gem" cx="120" cy="311" r="3" fill="var(--current)"/>
+            <circle class="gem" cx="2159" cy="311" r="3" fill="var(--current)"/>
+            <rect x="60" y="210" width="2159" height="80" fill="url(#stoneLit)"/>
             <g stroke="var(--gold)" stroke-width="3" opacity=".55" fill="none">
-              <line x1="180" y1="212" x2="180" y2="262"/><line x1="372" y1="212" x2="372" y2="262"/><line x1="564" y1="212" x2="564" y2="262"/><line x1="800" y1="212" x2="800" y2="262"/><line x1="1036" y1="212" x2="1036" y2="262"/><line x1="1228" y1="212" x2="1228" y2="262"/><line x1="1420" y1="212" x2="1420" y2="262"/>
+              <line x1="240" y1="226" x2="240" y2="274"/><line x1="465" y1="226" x2="465" y2="274"/><line x1="690" y1="226" x2="690" y2="274"/><line x1="915" y1="226" x2="915" y2="274"/><line x1="1140" y1="226" x2="1140" y2="274"/><line x1="1365" y1="226" x2="1365" y2="274"/><line x1="1590" y1="226" x2="1590" y2="274"/><line x1="1815" y1="226" x2="1815" y2="274"/><line x1="2040" y1="226" x2="2040" y2="274"/>
             </g>
-            <line x1="74" y1="288" x2="1526" y2="288" stroke="var(--gold)" stroke-width="3"/>
-            <line x1="60" y1="196" x2="1540" y2="196" stroke="var(--gold)" stroke-width="4"/>
-            <polygon points="800,28 1526,196 74,196" fill="url(#stoneLit)" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round"/>
-            <polyline points="134,180 800,66 1466,180" fill="none" stroke="var(--gold-deep)" stroke-width="2" opacity=".6"/>
-            <circle cx="800" cy="22" r="5" fill="var(--gold-bright)"/>
-            <circle class="gem" cx="800" cy="130" r="13" fill="none" stroke="var(--gold-bright)" stroke-width="2.4"/>
-            <circle class="gem" cx="800" cy="130" r="5" fill="var(--current)"/>
+            <line x1="60" y1="288" x2="2219" y2="288" stroke="var(--gold)" stroke-width="3"/>
+            <line x1="50" y1="210" x2="2229" y2="210" stroke="var(--gold)" stroke-width="4"/>
+            <polygon points="1139.5,16 2239,210 40,210" fill="url(#stoneLit)" stroke="var(--gold)" stroke-width="4" stroke-linejoin="round"/>
+            <polyline points="100,196 1139.5,52 2179,196" fill="none" stroke="var(--gold-deep)" stroke-width="2" opacity=".6"/>
+            <circle cx="1139.5" cy="12" r="5" fill="var(--gold-bright)"/>
+            <circle class="gem" cx="1139.5" cy="140" r="13" fill="none" stroke="var(--gold-bright)" stroke-width="2.4"/>
+            <circle class="gem" cx="1139.5" cy="140" r="5" fill="var(--current)"/>
           </svg>
           <a class="gate-link" href="https://atlasway-trading.com/" target="_blank" rel="noopener noreferrer" aria-label="Открыть сайт atlasway-trading.com"></a>
         </div>
