@@ -348,6 +348,31 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     <h2 class="lead">Натуральный камень — от первого эскиза до установки. Каждая вещь штучная.</h2>
     <p>Алексей Коротков — художник-реставратор памятников каменного зодчества. В 2009 году с отличием окончил Санкт-Петербургский художественно-реставрационный лицей и с тех пор работает с камнем: гранит, мрамор, известняк, песчаник.</p>
     <p>Мастерская находится в Ленинградской области. Она небольшая, и в этом её суть: заказчик говорит напрямую с мастером, который будет держать в руках его камень. Эскиз, при необходимости чертёж и 3D-визуализация, расчёт срока и цены — и работа по договору.</p>
+    <style>
+    .film-line{margin-top:clamp(20px,3vh,32px);display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+    .film-line a{
+      font-family:var(--display);font-size:clamp(18px,1.5vw,24px);line-height:1.3;
+      color:var(--ink);display:inline-flex;align-items:baseline;gap:.5em;position:relative;
+    }
+    .film-line a::after{
+      content:'';position:absolute;left:0;right:0;bottom:-4px;height:1px;background:var(--ink);
+      transform:scaleX(0);transform-origin:left;transition:transform .4s cubic-bezier(.2,.6,.2,1);
+    }
+    .film-line a:hover::after,.film-line a:focus-visible::after{transform:scaleX(1)}
+    .film-line svg{width:.7em;height:.7em;flex-shrink:0;transform:translateY(1px);transition:transform .3s}
+    .film-line a:hover svg{transform:translate(3px,1px)}
+    .film-line .meta{color:var(--stone);font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-weight:500}
+    </style>
+    
+    <p class="film-line">
+      <a href="https://disk.yandex.ru/i/h6MwCDzuN6ym9w" target="_blank" rel="noopener">
+        Смотреть фильм о мастерской
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M5 12h14M13 6l6 6-6 6"/>
+        </svg>
+      </a>
+      <span class="meta">6 минут</span>
+    </p>
     <div class="about-facts">
       <div><b>15+</b><span>лет работы с камнем</span></div>
       <div><b>500+</b><span>реализованных проектов</span></div>
