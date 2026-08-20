@@ -288,6 +288,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 .lb.open{opacity:1;visibility:visible}
 .lb-bg{
   position:absolute;inset:-15%;z-index:0;
+  opacity:0;transition:opacity .35s ease;
   background-size:cover;background-position:center;
   filter:url(#liquid-lg) saturate(215%) brightness(.56) contrast(112%);
   transform:scale(1.12);
@@ -296,8 +297,10 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   position:absolute;inset:-15%;z-index:0;pointer-events:none;
   background-size:cover;background-position:center;
   filter:url(#liquid-lg) saturate(130%) brightness(.7);
-  opacity:.28;mix-blend-mode:soft-light;
+  opacity:0;mix-blend-mode:soft-light;transition:opacity .35s ease;
 }
+.lb.ready .lb-bg{opacity:1}
+.lb.ready .lb-tex{opacity:.28}
 .lb-sheen{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
@@ -318,22 +321,20 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 .lb-stage img{
   width:100%;height:100%;object-fit:contain;   /* НЕ ОБРЕЗАЕМ, но занимаем максимум */
   filter:drop-shadow(0 24px 70px rgba(0,0,0,.6));
+  opacity:0;transition:opacity .3s ease;       /* показываем только загруженный кадр */
 }
+.lb-stage img.ready{opacity:1}
 .lb-top{
   position:absolute;top:0;left:0;right:0;z-index:4;
   display:flex;justify-content:flex-end;align-items:center;padding:18px var(--pad);
   background:linear-gradient(180deg,rgba(8,7,6,.5),rgba(8,7,6,0));
 }
 .lb-close{
-  color:var(--ink);font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;
-  font-weight:500;padding:11px 20px;border-radius:100px;
-  border:1px solid rgba(255,255,255,.28);
-  background:rgba(255,255,255,.10);
-  backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 6px 22px rgba(0,0,0,.35);
-  transition:background .3s,border-color .3s;
+  color:var(--ink);font-size:12px;letter-spacing:.28em;text-transform:uppercase;
+  font-weight:500;padding:8px 4px;transition:color .25s;
+  text-shadow:0 2px 14px rgba(0,0,0,.65);
 }
-.lb-close:hover{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.5)}
+.lb-close:hover,.lb-close:focus-visible{color:var(--dim)}
 .lb-cap{
   position:absolute;left:0;right:0;bottom:0;z-index:4;
   padding:26px var(--pad) 30px;text-align:center;color:var(--ink);
@@ -967,14 +968,30 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     fig.setAttribute('aria-label','Открыть: ' + (title || 'работа'));
     function open(){
       lastFocus = document.activeElement;
-      if(fig.dataset.glass) lbBg.style.backgroundImage = 'url(' + fig.dataset.glass + ')';
-      if(fig.dataset.tex) lbTex.style.backgroundImage = 'url(' + fig.dataset.tex + ')';
-      lbImg.src = fig.dataset.full || img.currentSrc || img.src;
-      lbImg.alt = img.alt;
+      var full = fig.dataset.full || img.currentSrc || img.src;
+      /* прячем прошлый кадр и показываем новый только когда он загружен —
+         иначе на миг мелькает предыдущая фотография */
+      lbImg.classList.remove('ready');
+      lb.classList.remove('ready');
       lbCap.textContent = (title && mat) ? (title + '. ' + mat) : (title || mat);
       lb.classList.add('open');
       document.body.style.overflow = 'hidden';
       document.getElementById('lbClose').focus();
+
+      var pre = new Image();
+      pre.decoding = 'async';
+      pre.onload = pre.onerror = function(){
+        if(!lb.classList.contains('open')) return;
+        if(fig.dataset.glass) lbBg.style.backgroundImage = 'url(' + fig.dataset.glass + ')';
+        if(fig.dataset.tex) lbTex.style.backgroundImage = 'url(' + fig.dataset.tex + ')';
+        lbImg.src = full;
+        lbImg.alt = img.alt;
+        requestAnimationFrame(function(){
+          lbImg.classList.add('ready');
+          lb.classList.add('ready');
+        });
+      };
+      pre.src = full;
     }
     fig.addEventListener('click', open);
     fig.addEventListener('keydown', function(e){
@@ -982,9 +999,14 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     });
   });
 
+  var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   function closeLb(){
-    lb.classList.remove('open');
+    lb.classList.remove('open'); lb.classList.remove('ready');
+    lbImg.classList.remove('ready');
     document.body.style.overflow = '';
+    setTimeout(function(){
+      if(!lb.classList.contains('open')){ lbImg.src = BLANK; lbCap.textContent = ''; }
+    }, 420);
     if(lastFocus) lastFocus.focus();
   }
   document.getElementById('lbClose').addEventListener('click', closeLb);
