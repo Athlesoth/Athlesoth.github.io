@@ -8,6 +8,7 @@
 <meta property="og:title" content="Камнерезная мастерская Алексея Короткова">
 <meta property="og:description" content="Штучные работы из натурального камня: памятники, барельефы, резьба, реставрация.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0E0D0C">
 <meta property="og:locale" content="ru_RU">
 <meta property="og:image" content="images/hero-f.jpg">
 <!-- OG-изображение: добавить og:image (1200×630) после выбора главного фото -->
@@ -282,14 +283,14 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 /* ============ ЛАЙТБОКС: ВО ВЕСЬ ЭКРАН, ПОЛЯ — ЖИДКОЕ СТЕКЛО ============ */
 .lb{
   position:fixed;inset:0;z-index:100;background:#080706;
-  opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s;
-  overflow:hidden;
+  opacity:0;visibility:hidden;transition:opacity .32s ease,visibility .32s;
+  overflow:hidden;overscroll-behavior:contain;   /* страница под ним не едет */
 }
 .lb.open{opacity:1;visibility:visible}
 .lb-bg{
   position:absolute;inset:-15%;z-index:0;
-  opacity:0;transition:opacity .35s ease;
   background-size:cover;background-position:center;
+  will-change:filter;   /* браузер готовит слой заранее */
   filter:url(#liquid-lg) saturate(215%) brightness(.56) contrast(112%);
   transform:scale(1.12);
 }
@@ -297,10 +298,8 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   position:absolute;inset:-15%;z-index:0;pointer-events:none;
   background-size:cover;background-position:center;
   filter:url(#liquid-lg) saturate(130%) brightness(.7);
-  opacity:0;mix-blend-mode:soft-light;transition:opacity .35s ease;
+  opacity:.28;mix-blend-mode:soft-light;
 }
-.lb.ready .lb-bg{opacity:1}
-.lb.ready .lb-tex{opacity:.28}
 .lb-sheen{
   position:absolute;inset:0;z-index:1;pointer-events:none;
   background:
@@ -316,10 +315,12 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 }
 .lb-stage{
   position:absolute;inset:0;z-index:2;
+  touch-action:manipulation;
   display:flex;align-items:center;justify-content:center;
 }
 .lb-stage img{
   position:absolute;inset:0;
+  pointer-events:none;   /* прозрачные поля кадра не должны ловить тап */
   width:100%;height:100%;object-fit:contain;   /* НЕ ОБРЕЗАЕМ, но занимаем максимум */
   filter:drop-shadow(0 24px 70px rgba(0,0,0,.6));
   opacity:0;transition:opacity .25s ease;
@@ -914,6 +915,32 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   'use strict';
 
   /* Шапка после первого экрана */
+  /* Замок прокрутки. overflow:hidden на body не держит iOS Safari,
+     поэтому фиксируем страницу и возвращаем позицию при закрытии. */
+  var lockY = 0, lockCount = 0;
+  function lockScroll(){
+    if(lockCount++ > 0) return;
+    lockY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    var b = document.body;
+    b.style.position='fixed'; b.style.top=(-lockY)+'px';
+    b.style.left='0'; b.style.right='0'; b.style.width='100%';
+    b.style.overflow='hidden';
+  }
+  function unlockScroll(){
+    if(--lockCount > 0) return;
+    if(lockCount < 0) lockCount = 0;
+    var b = document.body, h = document.documentElement;
+    b.style.position=''; b.style.top=''; b.style.left='';
+    b.style.right=''; b.style.width=''; b.style.overflow='';
+    /* на время возврата глушим плавную прокрутку, иначе страница
+       поедет анимацией через весь документ */
+    var prev = h.style.scrollBehavior;
+    h.style.scrollBehavior = 'auto';
+    void b.offsetHeight;              /* пересчёт высоты после снятия fixed */
+    window.scrollTo(0, lockY);
+    h.style.scrollBehavior = prev;
+  }
+
   var nav = document.getElementById('nav');
   var hero = document.querySelector('.hero');
   new IntersectionObserver(function(e){
@@ -929,14 +956,14 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     menu.classList.add('open');
     menuBtn.setAttribute('aria-expanded','true');
     menuBtn.textContent = 'закрыть';
-    document.body.style.overflow = 'hidden';
+    lockScroll();
     var first = menu.querySelector('a'); if(first) first.focus();
   }
   function closeMenu(){
     menu.classList.remove('open');
     menuBtn.setAttribute('aria-expanded','false');
     menuBtn.textContent = 'меню';
-    document.body.style.overflow = '';
+    unlockScroll();
     if(lastMenuFocus) lastMenuFocus.focus();
   }
   menuBtn.addEventListener('click', function(){
@@ -956,6 +983,19 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     });
   }, {threshold:0.12, rootMargin:'0px 0px -6% 0px'});
   document.querySelectorAll('.rv').forEach(function(el){ rvObs.observe(el); });
+
+  /* Текстуры стекла весят по паре килобайт — подтягиваем их заранее,
+     чтобы фон был готов уже к первому открытию и ничего не мигало */
+  function warmGlass(){
+    var seen = {};
+    document.querySelectorAll('.band figure').forEach(function(f){
+      [f.dataset.glass, f.dataset.tex].forEach(function(u){
+        if(u && !seen[u]){ seen[u] = 1; var i = new Image(); i.decoding = 'async'; i.src = u; }
+      });
+    });
+  }
+  if('requestIdleCallback' in window) requestIdleCallback(warmGlass, {timeout:2500});
+  else setTimeout(warmGlass, 1200);
 
   /* Лайтбокс: открыть — увеличить — закрыть. Без навигации. */
   var lb = document.getElementById('lb'),
@@ -998,8 +1038,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
       if(fig.dataset.tex) lbTex.style.backgroundImage = 'url(' + fig.dataset.tex + ')';
       lbCap.textContent = (title && mat) ? (title + '. ' + mat) : (title || mat);
       lb.classList.add('open');
-      lb.classList.add('ready');
-      document.body.style.overflow = 'hidden';
+      lockScroll();
       document.getElementById('lbClose').focus();
 
       /* 2. следом: полный размер проявляется поверх превью */
@@ -1023,9 +1062,9 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   function closeLb(){
     openToken++;
-    lb.classList.remove('open'); lb.classList.remove('ready');
+    lb.classList.remove('open');
     lbImg.classList.remove('ready'); lbImgLow.classList.remove('ready');
-    document.body.style.overflow = '';
+    unlockScroll();
     setTimeout(function(){
       if(!lb.classList.contains('open')){
         lbImg.src = BLANK; lbImgLow.src = BLANK; lbCap.textContent = '';
@@ -1035,6 +1074,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   }
   document.getElementById('lbClose').addEventListener('click', closeLb);
   lb.addEventListener('click', function(e){ var c = e.target.classList;
+    if(c.contains('lb-top') || c.contains('lb-cap')){ closeLb(); return; }
     if(e.target === lb || c.contains('lb-stage') || c.contains('lb-sheen') || c.contains('lb-bg') || c.contains('lb-tex')) closeLb(); });
   document.addEventListener('keydown', function(e){
     if(lb.classList.contains('open') && e.key === 'Escape') closeLb();
