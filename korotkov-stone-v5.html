@@ -319,11 +319,16 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   display:flex;align-items:center;justify-content:center;
 }
 .lb-stage img{
+  position:absolute;inset:0;
   width:100%;height:100%;object-fit:contain;   /* НЕ ОБРЕЗАЕМ, но занимаем максимум */
   filter:drop-shadow(0 24px 70px rgba(0,0,0,.6));
-  opacity:0;transition:opacity .3s ease;       /* показываем только загруженный кадр */
+  opacity:0;transition:opacity .25s ease;
 }
-.lb-stage img.ready{opacity:1}
+/* превью из ленты уже в кеше — показываем мгновенно,
+   полный размер проявляется поверх, когда догрузится */
+#lbImgLow.ready{opacity:1}
+#lbImg{transition:opacity .35s ease}
+#lbImg.ready{opacity:1}
 .lb-top{
   position:absolute;top:0;left:0;right:0;z-index:4;
   display:flex;justify-content:flex-end;align-items:center;padding:18px var(--pad);
@@ -895,6 +900,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   <div class="lb-tex" id="lbTex" aria-hidden="true"></div>
   <div class="lb-sheen" aria-hidden="true"></div>
   <div class="lb-stage">
+    <img id="lbImgLow" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" aria-hidden="true">
     <img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="">
   </div>
   <div class="lb-top">
@@ -957,6 +963,8 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
       lbCap = document.getElementById('lbCap'),
       lbBg = document.getElementById('lbBg'),
       lbTex = document.getElementById('lbTex'),
+      lbImgLow = document.getElementById('lbImgLow'),
+      openToken = 0,
       lastFocus = null;
 
   document.querySelectorAll('.band figure').forEach(function(fig){
@@ -966,32 +974,45 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     fig.setAttribute('tabindex','0');
     fig.setAttribute('role','button');
     fig.setAttribute('aria-label','Открыть: ' + (title || 'работа'));
+    var full = fig.dataset.full;
+    var warmed = false;
+    /* начинаем тянуть полный размер заранее — при наведении или касании,
+       чтобы к моменту клика он уже был в кеше */
+    function warm(){
+      if(warmed) return; warmed = true;
+      var w = new Image(); w.decoding = 'async'; w.src = full;
+    }
+    fig.addEventListener('pointerenter', warm, {passive:true});
+    fig.addEventListener('touchstart', warm, {passive:true});
+
     function open(){
       lastFocus = document.activeElement;
-      var full = fig.dataset.full || img.currentSrc || img.src;
-      /* прячем прошлый кадр и показываем новый только когда он загружен —
-         иначе на миг мелькает предыдущая фотография */
+      var token = ++openToken;
+
+      /* 1. мгновенно: превью из ленты — оно уже в кеше, задержки нет */
+      lbImgLow.src = img.currentSrc || img.src;
+      lbImgLow.classList.add('ready');
       lbImg.classList.remove('ready');
-      lb.classList.remove('ready');
+      lbImg.removeAttribute('src');
+      if(fig.dataset.glass) lbBg.style.backgroundImage = 'url(' + fig.dataset.glass + ')';
+      if(fig.dataset.tex) lbTex.style.backgroundImage = 'url(' + fig.dataset.tex + ')';
       lbCap.textContent = (title && mat) ? (title + '. ' + mat) : (title || mat);
       lb.classList.add('open');
+      lb.classList.add('ready');
       document.body.style.overflow = 'hidden';
       document.getElementById('lbClose').focus();
 
+      /* 2. следом: полный размер проявляется поверх превью */
       var pre = new Image();
       pre.decoding = 'async';
-      pre.onload = pre.onerror = function(){
-        if(!lb.classList.contains('open')) return;
-        if(fig.dataset.glass) lbBg.style.backgroundImage = 'url(' + fig.dataset.glass + ')';
-        if(fig.dataset.tex) lbTex.style.backgroundImage = 'url(' + fig.dataset.tex + ')';
+      pre.onload = function(){
+        if(token !== openToken) return;      /* успели открыть другое фото */
         lbImg.src = full;
         lbImg.alt = img.alt;
-        requestAnimationFrame(function(){
-          lbImg.classList.add('ready');
-          lb.classList.add('ready');
-        });
+        requestAnimationFrame(function(){ lbImg.classList.add('ready'); });
       };
       pre.src = full;
+      warmed = true;
     }
     fig.addEventListener('click', open);
     fig.addEventListener('keydown', function(e){
@@ -1001,11 +1022,14 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 
   var BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
   function closeLb(){
+    openToken++;
     lb.classList.remove('open'); lb.classList.remove('ready');
-    lbImg.classList.remove('ready');
+    lbImg.classList.remove('ready'); lbImgLow.classList.remove('ready');
     document.body.style.overflow = '';
     setTimeout(function(){
-      if(!lb.classList.contains('open')){ lbImg.src = BLANK; lbCap.textContent = ''; }
+      if(!lb.classList.contains('open')){
+        lbImg.src = BLANK; lbImgLow.src = BLANK; lbCap.textContent = '';
+      }
     }, 420);
     if(lastFocus) lastFocus.focus();
   }
