@@ -139,16 +139,21 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
     radial-gradient(ellipse 78% 58% at 50% 45%, rgba(14,13,12,.62) 0%, rgba(14,13,12,.30) 55%, rgba(14,13,12,0) 100%),
     linear-gradient(180deg,rgba(14,13,12,.62) 0%,rgba(14,13,12,.10) 26%,rgba(14,13,12,.10) 58%,rgba(14,13,12,.88) 100%);
 }
-.hero-title{
-  position:absolute;z-index:2;color:var(--ink);
-  left:var(--pad);right:var(--pad);
-  /* «на стене»: левый край, примерно середина кадра по высоте —
-     заметно выше рук мастера, ниже верхнего края стены */
-  top:44%;
-  text-align:left;
-  max-width:min(88vw,900px);
-  opacity:0;transform:translateY(18px);
-  animation:rise 1.1s .3s cubic-bezier(.25,.5,.2,1) forwards;
+/* ГЛАВНЫЙ ЭКРАН — текст на стене */
+.hero-title {
+  position: absolute;
+  z-index: 2;
+  color: var(--ink);
+  left: var(--pad);
+  right: var(--pad);
+  /* «на стене» — строго на стене, как на скриншоте,
+     верхняя часть стены, левый край */
+  top: 14%;
+  text-align: left;
+  max-width: min(88vw, 900px);
+  opacity: 0;
+  transform: translateY(18px);
+  animation: rise 1.1s .3s cubic-bezier(.25,.5,.2,1) forwards;
 }
 @keyframes rise{to{opacity:1;transform:none}}
 .hero-title .l1,.hero-title .l2{
