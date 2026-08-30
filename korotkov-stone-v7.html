@@ -143,17 +143,26 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 .hero-title {
   position: absolute;
   z-index: 2;
-  color: var(--ink);
   left: var(--pad);
   right: var(--pad);
-  /* «на стене» — строго на стене, как на скриншоте,
-     верхняя часть стены, левый край */
-  top: 25%;
-  text-align: left;
-  max-width: min(88vw, 800px);
+  top: 18%;                    /* чуть ниже верхнего края */
+  max-width: min(88vw, 900px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.1em;
   opacity: 0;
   transform: translateY(18px);
   animation: rise 1.1s .3s cubic-bezier(.25,.5,.2,1) forwards;
+}
+
+.hero-title span {
+  font-family: var(--display-hero);
+  font-weight: 300;
+  font-size: clamp(30px, 5.6vw, 68px);
+  line-height: 1.24;
+  letter-spacing: 0.06em;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.55);
 }
 @keyframes rise{to{opacity:1;transform:none}}
 .hero-title .l1,.hero-title .l2{
@@ -458,8 +467,10 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   <!-- ЗАМЕНИТЬ: главное фото — крупный план резьбы, самая сильная работа -->
   <img src="images/hero-f.jpg" alt="Алексей Коротков за резьбой по камню" width="3264" height="2448" fetchpriority="high">
   <div class="hero-title">
-    <span class="l1">Камнерезная мастерская</span>
-    <span class="l2">Алексея Короткова</span>
+	 <span>Камнерезная</span>
+	 <span>мастерская</span>
+	 <span>Алексея</span>
+     <span>Короткова</span>
   </div>
   <p class="hero-hint" aria-hidden="true">Смотреть работы</p>
 </header>
