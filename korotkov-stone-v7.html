@@ -145,7 +145,7 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
   z-index: 2;
   left: var(--pad);
   right: var(--pad);
-  top: 18%;                    /* чуть ниже верхнего края */
+  top: 16%;                    /* чуть ниже верхнего края */
   max-width: min(88vw, 900px);
   display: flex;
   flex-direction: column;
@@ -167,7 +167,8 @@ a:focus-visible,button:focus-visible{outline:1px solid var(--ink);outline-offset
 @keyframes rise{to{opacity:1;transform:none}}
 .hero-title .l1,.hero-title .l2{
   display:block;font-family:var(--display-hero);font-weight:300;
-  font-size:clamp(30px,5.6vw,68px);line-height:1.24;
+  font-size: clamp(36px, 6.8vw, 82px);
+  line-height:1.24;
   letter-spacing:.06em;   /* разрядка в духе Gee Stonework — только здесь */
   text-shadow:0 2px 30px rgba(0,0,0,.55);
 }
